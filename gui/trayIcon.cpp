@@ -27,6 +27,7 @@
 #include <QDesktopServices>
 #include <QUrl>
 #include <QSound>
+#include <QDir>
 
 #include "trayIcon.h"
 #include "dlgLogin.h"
@@ -394,7 +395,9 @@ void TrayIcon::onOptions()
         if (dlg.runOnStartUp())
         {
 #ifdef WIN32
-            settings.setValue(str::sAppName, QCoreApplication::applicationFilePath());			
+            QString appPath = QCoreApplication::applicationFilePath();
+            appPath = QDir::toNativeSeparators(appPath);
+            settings.setValue(str::sAppName, appPath);
 #endif
         }
         else
