@@ -1,0 +1,22 @@
+-----------------------------------------------------------------------------------------
+August 14, 2010. Version 0.2.226 (beta)
+-----------------------------------------------------------------------------------------
+
+Show received email date and time on notification window.
+Cosmetic improvements on notification window.
+Changed notification window icon.
+Added button to notification window to hide it with mouse click.
+Play sound on new email arrival.
+Improved Options dialog with sound file settings.
+Added new icons for menu items.
+Added "View Inbox" menu item to open Gmail inbox in browser window.
+Improved application version maintenance
+Gmail Herald checks for updates on startup and allow to download new versions from About window.
+Implement localization support with translatable string constants.
+Add support for Russian language.
+
+-----------------------------------------------------------------------------------------
+July 22, 2010. Version 0.1.202 (beta)
+-----------------------------------------------------------------------------------------
+
+The initial release.

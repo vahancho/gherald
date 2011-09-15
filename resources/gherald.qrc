@@ -1,0 +1,17 @@
+<RCC>
+	<qresource prefix="/icons" >
+		<file alias="app" >icon_app.png</file>
+		<file alias="exit" >icon_exit.png</file>
+		<file alias="new_mail" >icon_new_mail.png</file>
+		<file alias="notifier" >icon_notifier.png</file>
+		<file alias="failure" >icon_failure.png</file>
+		<file alias="close" >icon_close.png</file>
+		<file alias="options" >icon_options.png</file>
+		<file alias="user" >icon_user.png</file>
+		<file alias="check" >icon_check.png</file>
+		<file alias="view" >icon_view.png</file>
+		<file alias="refresh" >icon_refresh.png</file>
+		<file alias="about" >icon_about.png</file>
+		<file alias="warning" >icon_warning.png</file>
+ 	</qresource>
+</RCC>
