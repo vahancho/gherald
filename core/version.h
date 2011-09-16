@@ -56,13 +56,12 @@ public:
     bool operator>(const Version &ver) const;
 
 private:
+    unsigned int toVersionNumber(const QString &tokens) const;
 
     /// Version numbers.
-    unsigned int m_major;
-    unsigned int m_minor;
-    unsigned int m_buildNum;
+    QList<unsigned int> m_versions;
 
-    /// Version mode, such as (alpha) or (beta).
+    /// Version mode, such as "(alpha)" or "(beta)".
     QString m_mode;
 };
 

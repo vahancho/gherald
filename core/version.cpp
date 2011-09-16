@@ -28,10 +28,6 @@ const QString sNumSeparator('.');
 const QString sTokenSeparator(' ');
 
 Version::Version()
-    :
-        m_major(0),
-        m_minor(0),
-        m_buildNum(0)
 {}
 
 Version::Version(const QString &verStr)
@@ -47,76 +43,66 @@ bool Version::fromString(const QString &verStr)
     QStringList verTokens = verStr.split(sTokenSeparator, QString::SkipEmptyParts);
 
     // Check for format.
-    if (verTokens.size() < 1 || verTokens.size() > 2)
+    if (verTokens.size() != 1 && verTokens.size() != 2)
         return false;
+
+    reset();
 
     if (verTokens.size() == 2)
         m_mode = verTokens.last();
 
     QStringList numTokens = verTokens.first().split(sNumSeparator, QString::SkipEmptyParts);
-
-    // Check for format correctness - it should be three separated numbers.
-    if (numTokens.size() == 3)
-    {
-        bool converted = false;
-
-        int verNum = numTokens.at(0).toInt(&converted);
-
-        if (converted)
-            m_major = verNum;
-        else
-            return false;
-
-        verNum = numTokens.at(1).toInt(&converted);
-
-        if (converted)
-            m_minor = verNum;
-        else
-            return false;
-
-        verNum = numTokens.at(2).toInt(&converted);
-
-        if (converted)
-            m_buildNum = verNum;
-        else
-            return false;
-
-        return true;
+    foreach (const QString &token, numTokens) {
+        m_versions.push_back(toVersionNumber(token));
     }
-    else
-        return false;
+
+    return true;
 }
 
 QString Version::toString() const
 {
-    return QString("%1%2%3%4%5%6%7")
-                    .arg(m_major)
-                    .arg(sNumSeparator)
-                    .arg(m_minor)
-                    .arg(sNumSeparator)
-                    .arg(m_buildNum)
-                    .arg(sTokenSeparator)
-                    .arg(m_mode);
+    QString versionString;
+    for (int i = 0; i < m_versions.size(); i++) {
+        if (i != 0)
+            versionString += sNumSeparator;
+
+        versionString += QString::number(m_versions.at(i));
+    }
+
+    versionString += sTokenSeparator + m_mode;
+    return versionString;
 }
 
 void Version::reset()
 {
-    m_major = 0;
-    m_minor = 0;
-    m_buildNum = 0;
+    m_versions.clear();
     m_mode = QString();
 }
 
 bool Version::operator>(const Version &ver) const
 {
-    if (m_major > ver.m_major ||
-        m_minor > ver.m_minor ||
-        m_buildNum > ver.m_buildNum)
-    {
-        return true;
+    for (int i = 0; i < m_versions.size(); i++) {
+        if (i < ver.m_versions.size()) {
+            unsigned int thisVersion = m_versions.at(i);
+            unsigned int thatVersion = ver.m_versions.at(i);
+            if (thisVersion > thatVersion)
+                return true;
+            else if (thisVersion < thatVersion)
+                return false;
+        }
     }
+
+    return false;
+}
+
+unsigned int Version::toVersionNumber(const QString &tokens) const
+{
+    bool converted = false;
+    unsigned int verNum = tokens.toInt(&converted);
+    if (converted)
+        return verNum;
     else
-        return false;
+        return 0;
 }
 
 } // namespace core
