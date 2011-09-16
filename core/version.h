@@ -56,6 +56,7 @@ public:
     bool operator>(const Version &ver) const;
 
 private:
+    /// Returns the version number from the string or null on error.
     unsigned int toVersionNumber(const QString &tokens) const;
 
     /// Version numbers.
