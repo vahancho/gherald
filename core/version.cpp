@@ -58,23 +58,23 @@ bool Version::fromString(const QString &verStr)
     // Check for format correctness - it should be three separated numbers.
     if (numTokens.size() == 3)
     {
-        bool *converted = new bool(false);
+        bool converted = false;
 
-        int verNum = numTokens.at(0).toInt(converted);
+        int verNum = numTokens.at(0).toInt(&converted);
 
         if (converted)
             m_major = verNum;
         else
             return false;
 
-        verNum = numTokens.at(1).toInt(converted);
+        verNum = numTokens.at(1).toInt(&converted);
 
         if (converted)
             m_minor = verNum;
         else
             return false;
 
-        verNum = numTokens.at(2).toInt(converted);
+        verNum = numTokens.at(2).toInt(&converted);
 
         if (converted)
             m_buildNum = verNum;
