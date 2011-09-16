@@ -72,6 +72,6 @@ namespace str
 
     // Version related strings
     const char *sVersionUrl = "http://gherald.sourceforge.net/version";
-    const char *sVersion = "0.2.226 (beta)";
+    const char *sVersion = "0.3";
 
 } // namespace str
