@@ -10,7 +10,7 @@ HEADERS += ./gui/dlgLogin.h \
            ./core/propertyTable.h \
            ./parser/mailEntry.h \
            ./parser/parser.h \
-	       ./parser/atomParser.h \
+           ./parser/atomParser.h \
            ./strings/strings.h \
            ./strings/guiStrings.h
 
