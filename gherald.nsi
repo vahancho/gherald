@@ -1,6 +1,5 @@
-;NSIS Modern User Interface
-;Welcome/Finish Page Example Script
-;Written by Joost Verburg
+;NSIS Gmail Herald Install Script
+;Written by Joost Verburg, updated by Vahan Aghajanyan
 
 ;--------------------------------
 ;Include Modern UI
