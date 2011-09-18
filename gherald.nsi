@@ -91,6 +91,7 @@ Section "Gmail Herald" SecDummy
 
   ;Store installation folder
   WriteRegStr HKCU "Software\${NAME}" "" $INSTDIR
+  WriteRegStr HKCU "Software\${NAME}" "Version" ${VERSION}
 
   ;Create uninstaller
   WriteUninstaller "$INSTDIR\Uninstall.exe"
