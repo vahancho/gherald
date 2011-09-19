@@ -370,7 +370,7 @@ void TrayIcon::onOptions()
 
 #ifdef WIN32
     QSettings settings("HKEY_CURRENT_USER\\Software\\Microsoft\\Windows\\CurrentVersion\\Run", 
-    QSettings::NativeFormat);
+                       QSettings::NativeFormat);
 
     dlg.setRunOnStartUp(!settings.value(str::sAppName).toString().isEmpty());
 #endif
