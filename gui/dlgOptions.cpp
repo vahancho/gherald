@@ -168,8 +168,8 @@ void DlgOptions::onFileBrowse()
 
         if (files.size() > 0)
         {
-            m_leSoundFilePath->setText(files.at(0));
-            m_lastBrowseDir = fd.directory().absolutePath();
+            m_leSoundFilePath->setText(QDir::toNativeSeparators(files.at(0)));
+            m_lastBrowseDir = QDir::toNativeSeparators(fd.directory().absolutePath());
         }
     }
 }
