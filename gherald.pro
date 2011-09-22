@@ -12,7 +12,9 @@ INCLUDEPATH += ./GeneratedFiles \
                ./GeneratedFiles/release \
 			   $(ProjectDir)/. \
                .
-LIBS += -lqtmain -lQtCore4 -lQtGui4 -lQtNetwork4
+win32:LIBS += -lqtmain -lQtCore4 -lQtGui4 -lQtNetwork4
+unix:LIBS += -lQtCore -lQtGui -lQtNetwork
+
 DEPENDPATH += .
 MOC_DIR += ./GeneratedFiles/release
 OBJECTS_DIR += release
