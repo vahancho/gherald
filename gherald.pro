@@ -4,7 +4,10 @@ TEMPLATE = app
 TARGET = gherald
 DESTDIR = ./release
 QT += network xml
+
 CONFIG += release
+win32:CONFIG += embed_manifest_exe
+
 INCLUDEPATH += ./GeneratedFiles \
                ./GeneratedFiles/release \
 			   $(ProjectDir)/. \
