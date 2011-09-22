@@ -108,6 +108,7 @@ Section "Gmail Herald" SecDummy
   ;ADD YOUR OWN FILES HERE...
   File "Release\gherald.exe"
   File "distrib\msvcr100.dll"
+  File "distrib\msvcp100.dll"
   File "distrib\QtCore4.dll"
   File "distrib\QtGui4.dll"
   File "distrib\QtNetwork4.dll"
@@ -163,6 +164,7 @@ Section "Uninstall"
 
   Delete "$INSTDIR\gherald.exe"
   Delete "$INSTDIR\msvcr100.dll"
+  Delete "$INSTDIR\msvcp100.dll"
   Delete "$INSTDIR\QtCore4.dll"
   Delete "$INSTDIR\QtGui4.dll"
   Delete "$INSTDIR\QtNetwork4.dll"
