@@ -21,5 +21,8 @@ OBJECTS_DIR += release
 UI_DIR += ./GeneratedFiles
 RCC_DIR += ./GeneratedFiles
 
+# Adds icon to the executable file on Windows.
+win32:RC_FILE = application.rc
+
 #Include file(s)
 include(gherald.pri)

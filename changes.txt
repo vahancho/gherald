@@ -13,6 +13,8 @@ Microsoft run times.
 
 4) Removed dependency from QCA libraries and use Qt based functions instead.
 
+5) Added icon for the Gmail Herald executable file (Windows).
+
 -----------------------------------------------------------------------------------------
 August 14, 2010. Version 0.2.226 (beta)
 -----------------------------------------------------------------------------------------
