@@ -11,6 +11,8 @@ GMail Herald start as expected. Now the native separators used instead.
 install package includes missed in previous packages SSL related libraries as well
 Microsoft run times.
 
+4) Removed dependency from QCA libraries and use Qt based functions instead.
+
 -----------------------------------------------------------------------------------------
 August 14, 2010. Version 0.2.226 (beta)
 -----------------------------------------------------------------------------------------
