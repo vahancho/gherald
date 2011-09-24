@@ -7,6 +7,8 @@ GMail Herald start as expected. Now the native separators used instead.
 
 2) Improved version control system.
 
+3) Implemented the new installer script for new NSIS based package generation.
+
 -----------------------------------------------------------------------------------------
 August 14, 2010. Version 0.2.226 (beta)
 -----------------------------------------------------------------------------------------
