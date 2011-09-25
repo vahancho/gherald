@@ -15,7 +15,7 @@
 
   ;Name and file
   Name "${NAME}"
-  OutFile "installation\gherald.exe"
+  OutFile "installation\GmailHerald-Win32-v${VERSION}.exe"
 
   ;Default installation folder
   InstallDir "$PROGRAMFILES32\Gmail Herald"
