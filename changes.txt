@@ -1,5 +1,5 @@
 -----------------------------------------------------------------------------------------
-N/A, 2011. Version 0.3
+September 26, 2011. Version 0.3
 -----------------------------------------------------------------------------------------
 1) Fixed wrong separators usage issue in GMail Herald executable path when save it into
 the Windows registry for starting the application on system start up. This prevented to
@@ -8,7 +8,7 @@ GMail Herald start as expected. Now the native separators used instead.
 2) Improved version control system.
 
 3) Implemented the new installer script for new NSIS based package generation. The new
-install package includes missed in previous packages SSL related libraries as well
+install package includes SSL related libraries missed in previous packages as well
 Microsoft run times.
 
 4) Removed dependency from QCA libraries and use Qt based functions instead.
