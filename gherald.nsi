@@ -5,6 +5,7 @@
 ;Include Modern UI
 
   !include "MUI2.nsh"
+  !include "WordFunc.nsh"
 
 ;--------------------------------
 ;General
@@ -45,9 +46,37 @@ Function .onInit
   "UninstallString"
   StrCmp $R0 "" done
 
+  ; Get the installed version.
+  ReadRegStr $R1 HKLM \
+  "Software\Microsoft\Windows\CurrentVersion\Uninstall\${NAME}" \
+  "DisplayVersion"
+
+  ; Convert version if some characters used, f. e. "0.2.226b"
+  ${VersionConvert} "$R1" "" $R1
+
+  ; Compare new and installed versions.
+  ${VersionCompare} "${VERSION}" "$R1" "$R2"
+
+  ; Decide what to do.
+  IntCmp $R2 1 ask_to_update same_version do_not_update
+
+do_not_update:
+  MessageBox MB_OK|MB_ICONEXCLAMATION \
+  "The more recent version $R1 of ${NAME} is already installed."
+  Abort
+
+same_version:
+  MessageBox MB_OKCANCEL|MB_ICONEXCLAMATION \
+  "${NAME} $R1 is already installed. $\n$\nClick `OK` to reinstall existing \
+  version or `Cancel` to cancel this upgrade." \
+  IDOK done
+  Abort
+
+ask_to_update:
   MessageBox MB_OKCANCEL|MB_ICONEXCLAMATION \
   "${NAME} is already installed. $\n$\nClick `OK` to remove the \
-  previous version or `Cancel` to cancel this upgrade." \
+  previous version $R1 and install new version ${VERSION} or `Cancel` \
+  to cancel this upgrade." \
   IDOK uninst
   Abort
 
@@ -176,8 +205,12 @@ Section "Uninstall"
   Delete "$INSTDIR\qt.conf"
   Delete "$INSTDIR\Uninstall.exe"
   Delete "$INSTDIR\settings.ini"
-
   Delete "$INSTDIR\translations\gherald_ru.qm"
+
+  ; These files could remain from the previous versions of GHerald.
+  Delete "$INSTDIR\msvcr80.dll"
+  Delete "$INSTDIR\msvcp80.dll"
+  Delete "$INSTDIR\Qca2.dll"
 
   RMDir "$INSTDIR\translations"
   RMDir "$INSTDIR"
