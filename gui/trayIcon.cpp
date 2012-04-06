@@ -60,6 +60,9 @@ TrayIcon::TrayIcon()
         m_translator(0),
         m_lastMailCount(0)
 {
+    connect(this, SIGNAL(activated(QSystemTrayIcon::ActivationReason)),
+            this, SLOT(trayIconActivated(QSystemTrayIcon::ActivationReason)));
+
     m_parser = new core::AtomParser;
 
     // Menu
@@ -124,9 +127,6 @@ void TrayIcon::createMenu()
     menu->addAction(QIcon(":icons/about"), TRANSLATE(str::sMenuAbout), this, SLOT(onAbout()));
     menu->addSeparator();
     menu->addAction(QIcon(":icons/exit"), TRANSLATE(str::sMenuExit), qApp, SLOT(quit()));
-
-    connect(this, SIGNAL(activated(QSystemTrayIcon::ActivationReason)),
-            this, SLOT(trayIconActivated(QSystemTrayIcon::ActivationReason)));
 
     setContextMenu(menu);
 }
