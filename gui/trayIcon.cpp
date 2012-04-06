@@ -91,6 +91,7 @@ TrayIcon::TrayIcon()
     connect(&m_iconTimer, SIGNAL(timeout()), this, SLOT(onIconTimer()));
 
     m_parser->parse();
+    m_versionManager.checkForUpdates();
 }
 
 TrayIcon::~TrayIcon()
