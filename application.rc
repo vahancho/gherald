@@ -1,1 +1,39 @@
 IDI_ICON1 ICON DISCARDABLE "resources/Email.ico"
+
+# if defined(UNDER_CE)
+#  include <winbase.h>
+# else
+#  include <winver.h>
+# endif
+
+VS_VERSION_INFO VERSIONINFO
+	FILEVERSION 0,3,1,0
+	PRODUCTVERSION 0,3,1,0
+	FILEFLAGSMASK 0x3fL
+#ifdef _DEBUG
+	FILEFLAGS VS_FF_DEBUG
+#else
+	FILEFLAGS 0x0L
+#endif
+	FILEOS VOS__WINDOWS32
+	FILETYPE VFT_DLL
+	FILESUBTYPE 0x0L
+	BEGIN
+		BLOCK "StringFileInfo"
+		BEGIN
+			BLOCK "040904B0"
+			BEGIN
+				VALUE "CompanyName", "Vahan Aghajanyan\0"
+				VALUE "FileDescription", "GMail Herald\0"
+				VALUE "FileVersion", "0.3.1.0\0"
+				VALUE "LegalCopyright", "Copyright (C) 2012 Vahan Aghajanyan (vahancho@gmail.com)\0"
+				VALUE "OriginalFilename", "gherald.exe\0"
+				VALUE "ProductName", "GMail Herald 0.3\0"
+			END
+		END
+		BLOCK "VarFileInfo"
+		BEGIN
+			VALUE "Translation", 0x409, 1200
+		END
+	END
+/* End of Version info */
