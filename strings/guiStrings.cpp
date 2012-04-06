@@ -45,7 +45,7 @@ namespace str
     const char *sAbout = QT_TRANSLATE_NOOP("GHerald",
             "Gmail Herald v %1"
             "<BR>"
-            "Copyright © 2010-2011 <a href=\"mailto:vahancho@gmail.com\">Vahan Aghajanyan</a>."
+            "Copyright © 2010-2012 <a href=\"mailto:vahancho@gmail.com\">Vahan Aghajanyan</a>."
             "<BR>"
             "All Rights Reserved."
             "<BR><BR>"
