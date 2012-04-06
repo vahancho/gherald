@@ -108,10 +108,12 @@ void TrayIcon::createMenu()
 {
     QMenu *menu = contextMenu();
 
-    if (menu)
+    if (menu) {
         menu->clear();
-    else
+    } else {
         menu = new QMenu;
+        setContextMenu(menu);
+    }
 
     QAction *act = menu->addAction(QIcon(":icons/view"), TRANSLATE(str::sMenuViewInbox), this, SLOT(onViewInbox()));
 
@@ -127,8 +129,6 @@ void TrayIcon::createMenu()
     menu->addAction(QIcon(":icons/about"), TRANSLATE(str::sMenuAbout), this, SLOT(onAbout()));
     menu->addSeparator();
     menu->addAction(QIcon(":icons/exit"), TRANSLATE(str::sMenuExit), qApp, SLOT(quit()));
-
-    setContextMenu(menu);
 }
 
 void TrayIcon::registerDefaults()
