@@ -11,7 +11,7 @@
 ;General
 
   ; Define version
-  !define VERSION "0.3"
+  !define VERSION "0.3.1"
   !define NAME "Gmail Herald"
 
   ;Name and file
