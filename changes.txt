@@ -2,6 +2,8 @@
 April 6, 2012. Version 0.3.1
 -----------------------------------------------------------------------------------------
 - Fixed issue caused by opening multiple browser windows (tabs) when double clicking on icon.
+- Refactored the application versions management code.
+- Minor code improvements.
 
 -----------------------------------------------------------------------------------------
 September 26, 2011. Version 0.3
