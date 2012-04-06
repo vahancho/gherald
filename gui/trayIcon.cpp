@@ -198,9 +198,9 @@ void TrayIcon::translate(const QString &language)
     // Reset previous translation.
     if (m_translator)
     {
-    qApp->removeTranslator(m_translator);
-    delete m_translator;
-    m_translator = 0;
+        qApp->removeTranslator(m_translator);
+        delete m_translator;
+        m_translator = 0;
     }
 
     // If requested language is not default language, translate GUI strings.
