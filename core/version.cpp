@@ -1,5 +1,5 @@
 /**************************************************************************
-*   Copyright (C) 2010 by Vahan Aghajanyan                                *
+*   Copyright (C) 2011 by Vahan Aghajanyan                                *
 *   vahancho@gmail.com                                                    *
 *                                                                         *
 *   This program is free software; you can redistribute it and/or modify  *
@@ -18,19 +18,19 @@
 *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
 ***************************************************************************/
 
-#include <QStringList>
+#include <stdlib.h>
+#include <sstream>
 #include "version.h"
 
 namespace core
 {
 
-const QString sNumSeparator('.');
-const QString sTokenSeparator(' ');
+const char sNumSeparator = '.';
 
 Version::Version()
 {}
 
-Version::Version(const QString &verStr)
+Version::Version(const std::string &verStr)
 {
     fromString(verStr);
 }
@@ -38,71 +38,65 @@ Version::Version(const QString &verStr)
 Version::~Version()
 {}
 
-bool Version::fromString(const QString &verStr)
+void Version::fromString(const std::string &verStr)
 {
-    QStringList verTokens = verStr.split(sTokenSeparator, QString::SkipEmptyParts);
-
-    // Check for format.
-    if (verTokens.size() != 1 && verTokens.size() != 2)
-        return false;
-
     reset();
 
-    if (verTokens.size() == 2)
-        m_mode = verTokens.last();
+    size_t prev = 0;
+    size_t pos = 0;
 
-    QStringList numTokens = verTokens.first().split(sNumSeparator, QString::SkipEmptyParts);
-    foreach (const QString &token, numTokens) {
-        m_versions.push_back(toVersionNumber(token));
+    while(pos < verStr.size()) {
+        pos = verStr.find(sNumSeparator, prev);
+        std::string s = verStr.substr(prev, pos - prev);
+        unsigned int i = atoi(s.c_str());
+        m_versions.push_back(i);
+        prev = pos + 1;
     }
 
-    return true;
+    pos = verStr.rfind(sNumSeparator);
+    while (isdigit(verStr[++pos]))
+    {}
+
+    m_mode.clear();
+    m_mode = verStr.substr(pos);
 }
 
-QString Version::toString() const
+std::string Version::toString() const
 {
-    QString versionString;
-    for (int i = 0; i < m_versions.size(); i++) {
+    std::string retStr;
+    for (size_t i = 0; i < m_versions.size(); ++i) {
         if (i != 0)
-            versionString += sNumSeparator;
-
-        versionString += QString::number(m_versions.at(i));
+            retStr.push_back(sNumSeparator);
+        std::ostringstream sin;
+        sin << m_versions[i];
+        retStr.append(sin.str());
     }
+    retStr += m_mode;
 
-    versionString += sTokenSeparator + m_mode;
-    return versionString;
+    return retStr;
 }
 
 void Version::reset()
 {
     m_versions.clear();
-    m_mode = QString();
+    m_mode.clear();
 }
 
 bool Version::operator>(const Version &ver) const
 {
-    for (int i = 0; i < m_versions.size(); i++) {
-        if (i < ver.m_versions.size()) {
-            unsigned int thisVersion = m_versions.at(i);
-            unsigned int thatVersion = ver.m_versions.at(i);
-            if (thisVersion > thatVersion)
-                return true;
-            else if (thisVersion < thatVersion)
-                return false;
-        }
+    for (size_t i = 0; i < m_versions.size(); i++) {
+        unsigned int thisVersion = m_versions.at(i);
+        unsigned int thatVersion = 0;
+        if (i < ver.m_versions.size())
+            thatVersion = ver.m_versions.at(i);
+
+        if (thisVersion > thatVersion)
+            return true;
+        else if (thisVersion < thatVersion)
+            return false;
     }
 
     return false;
-}
-
-unsigned int Version::toVersionNumber(const QString &tokens) const
-{
-    bool converted = false;
-    unsigned int verNum = tokens.toInt(&converted);
-    if (converted)
-        return verNum;
-    else
-        return 0;
 }
 
 } // namespace core

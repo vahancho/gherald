@@ -34,7 +34,6 @@ class VersionManager : public QObject
     Q_OBJECT
 
 public:
-
     VersionManager();
 
     ~VersionManager();
@@ -47,8 +46,13 @@ public:
 
     bool updatesAvailable() const;
 
-private slots:
+    /// Downloads the software.
+    void download() const;
+signals:
+    /// This signal emitted when version check finished.
+    void checked();
 
+private slots:
     /// Fetches the fetched data from HTTP.
     void fetchHttpData(const QHttpResponseHeader &resp);
 
@@ -63,7 +67,11 @@ private:
     /// Http
     QHttp m_http;
 
+    /// Stores the version file url.
     QUrl m_versionUrl;
+
+    /// Stores the software download url.
+    QString m_downloadUrl;
 };
 
 } // namespace core

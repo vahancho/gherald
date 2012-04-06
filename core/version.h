@@ -1,5 +1,5 @@
 /**************************************************************************
-*   Copyright (C) 2010 by Vahan Aghajanyan                                *
+*   Copyright (C) 2011 by Vahan Aghajanyan                                *
 *   vahancho@gmail.com                                                    *
 *                                                                         *
 *   This program is free software; you can redistribute it and/or modify  *
@@ -21,7 +21,7 @@
 #ifndef __VERSION_H__
 #define __VERSION_H__
 
-class QString;
+#include <vector>
 
 namespace core
 {
@@ -31,12 +31,11 @@ class Version
 {
 
 public:
-
     /// Construct default version.
     Version();
 
     /// Construct version from string.
-    Version(const QString &verStr);
+    Version(const std::string &verStr);
 
     ~Version();
 
@@ -44,10 +43,10 @@ public:
     /*!
         Version string should follow the format: "major.minor.build_num (mode)"
     */
-    bool fromString(const QString &verStr);
+    void fromString(const std::string &verStr);
 
     /// Returns the current version as string.
-    QString toString() const;
+    std::string toString() const;
 
     /// Resets the version.
     void reset();
@@ -56,14 +55,11 @@ public:
     bool operator>(const Version &ver) const;
 
 private:
-    /// Returns the version number from the string or null on error.
-    unsigned int toVersionNumber(const QString &tokens) const;
-
     /// Version numbers.
-    QList<unsigned int> m_versions;
+    std::vector<unsigned int> m_versions;
 
     /// Version mode, such as "(alpha)" or "(beta)".
-    QString m_mode;
+    std::string m_mode;
 };
 
 } // namespace core

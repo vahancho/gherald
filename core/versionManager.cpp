@@ -1,5 +1,5 @@
 /**************************************************************************
-*   Copyright (C) 2010 by Vahan Aghajanyan                                *
+*   Copyright (C) 2011 by Vahan Aghajanyan                                *
 *   vahancho@gmail.com                                                    *
 *                                                                         *
 *   This program is free software; you can redistribute it and/or modify  *
@@ -19,6 +19,7 @@
 ***************************************************************************/
 
 #include <QString>
+#include <QDesktopServices>
 #include "versionManager.h"
 #include "../strings/strings.h"
 
@@ -37,8 +38,6 @@ VersionManager::VersionManager()
             this, SLOT(onHttpDone(bool)));
 
     m_http.setHost(m_versionUrl.host());
-
-    checkForUpdates();
 }
 
 VersionManager::~VersionManager()
@@ -48,12 +47,12 @@ VersionManager::~VersionManager()
 
 QString VersionManager::currentVersion() const
 {
-    return m_currentVersion.toString();
+    return QString::fromStdString(m_currentVersion.toString());
 }
 
 QString VersionManager::updatedVersion() const
 {
-    return m_updatedVersion.toString();
+    return QString::fromStdString(m_updatedVersion.toString());
 }
 
 void VersionManager::checkForUpdates()
@@ -68,13 +67,15 @@ bool VersionManager::updatesAvailable() const
 
 void VersionManager::fetchHttpData(const QHttpResponseHeader &resp)
 {
-    if (resp.statusCode() == 200)
-    {
+    if (resp.statusCode() == 200) {
         QByteArray newVersion = m_http.readAll();
-        m_updatedVersion.fromString(newVersion);
-    }
-    else
-    {
+        QList<QByteArray> tokens = newVersion.split('\n');
+        if (tokens.size() > 1) {
+            m_updatedVersion.fromString(tokens.at(0).trimmed().data());
+            m_downloadUrl = tokens.at(1).trimmed();
+        }
+        emit checked();
+    } else {
         // Done with fail.
         m_http.abort();
     }
@@ -84,7 +85,12 @@ void VersionManager::onHttpDone(bool error)
 {
     // Reset updated version on Http error.
     if (error)
-    m_updatedVersion.reset();
+        m_updatedVersion.reset();
+}
+
+void VersionManager::download() const
+{
+    QDesktopServices::openUrl(QUrl(m_downloadUrl, QUrl::TolerantMode));
 }
 
 } // namespace core
