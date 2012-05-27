@@ -406,20 +406,23 @@ void TrayIcon::onOptions()
             settings.remove(str::sAppName);
 #endif
 
-    // Set the mail checking interval
-    m_defaultManager.setValue(str::sDefInterval, dlg.timout());
-    m_parseTimer.setInterval(dlg.timout() * 60000);
+        // Set the mail checking interval
+        m_defaultManager.setValue(str::sDefInterval, dlg.timout());
+        m_parseTimer.setInterval(dlg.timout() * 60000);
 
-    // Set the sound file path
-    m_defaultManager.setValue(str::sDefSoundFile, dlg.soundFilePath());
-    m_defaultManager.setValue(str::sDefSoundPlay, dlg.playSound());
+        // Set the sound file path
+        m_defaultManager.setValue(str::sDefSoundFile, dlg.soundFilePath());
+        m_defaultManager.setValue(str::sDefSoundPlay, dlg.playSound());
 
-    // Set the current language
-    QVariant currentLanguageKey = languages.value(dlg.currentLanguage());
-    m_defaultManager.setValue(str::sDefLanguage, currentLanguageKey);
+        // Set the current language
+        QVariant currentLanguageKey = languages.value(dlg.currentLanguage());
+        m_defaultManager.setValue(str::sDefLanguage, currentLanguageKey);
 
-    // Translate GUI
-    translate(currentLanguageKey.toString());
+        // Translate GUI
+        translate(currentLanguageKey.toString());
+
+        // Save defaults immediately.
+        m_defaultManager.saveDefaults();
     }
 }
 
