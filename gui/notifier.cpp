@@ -107,7 +107,7 @@ void Notifier::leaveEvent(QEvent *event)
 void Notifier::mousePressEvent(QMouseEvent* event)
 {
     m_offset = event->globalPos() - pos();
-    QTextBrowser::mouseReleaseEvent(event);
+    QTextBrowser::mousePressEvent(event);
 }
 
 void Notifier::mouseMoveEvent(QMouseEvent* event)
