@@ -23,7 +23,6 @@
 
 #include <QHttp>
 #include <QUrl>
-#include "version.h"
 
 namespace core
 {
@@ -60,9 +59,10 @@ private slots:
     void onHttpDone(bool error);
 
 private:
-    Version m_currentVersion;
+    int m_currentVersion;
+    int m_updatedVersion;
 
-    Version m_updatedVersion;
+    QString m_updatedVersionStr;
 
     /// Http
     QHttp m_http;

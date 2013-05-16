@@ -28,7 +28,8 @@ namespace core
 
 VersionManager::VersionManager()
     :
-        m_currentVersion(str::sVersion),
+        m_currentVersion(GHERALD_VERSION),
+        m_updatedVersion(-1),
         m_versionUrl(str::sVersionUrl)
 {
     connect(&m_http, SIGNAL(readyRead(const QHttpResponseHeader &)), this,
@@ -47,12 +48,12 @@ VersionManager::~VersionManager()
 
 QString VersionManager::currentVersion() const
 {
-    return QString::fromStdString(m_currentVersion.toString());
+    return GHERALD_VERSION_STR;
 }
 
 QString VersionManager::updatedVersion() const
 {
-    return QString::fromStdString(m_updatedVersion.toString());
+    return m_updatedVersionStr;
 }
 
 void VersionManager::checkForUpdates()
@@ -71,8 +72,9 @@ void VersionManager::fetchHttpData(const QHttpResponseHeader &resp)
         QByteArray newVersion = m_http.readAll();
         QList<QByteArray> tokens = newVersion.split('\n');
         if (tokens.size() > 1) {
-            m_updatedVersion.fromString(tokens.at(0).trimmed().data());
-            m_downloadUrl = tokens.at(1).trimmed();
+            m_updatedVersion = tokens.at(0).trimmed().toInt(0, 16);
+            m_updatedVersionStr = tokens.at(1).trimmed();
+            m_downloadUrl = tokens.at(2).trimmed();
         }
         emit checked();
     } else {
@@ -84,8 +86,9 @@ void VersionManager::fetchHttpData(const QHttpResponseHeader &resp)
 void VersionManager::onHttpDone(bool error)
 {
     // Reset updated version on Http error.
-    if (error)
-        m_updatedVersion.reset();
+    if (error) {
+        m_updatedVersion = -1;
+    }
 }
 
 void VersionManager::download() const

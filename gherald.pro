@@ -8,6 +8,10 @@ QT += network xml
 CONFIG += release
 win32:CONFIG += embed_manifest_exe
 
+# Define the application version and version string.
+DEFINES += GHERALD_VERSION=0x0003020b
+DEFINES += GHERALD_VERSION_STR=\\\"0.3.2b\\\"
+
 INCLUDEPATH += ./GeneratedFiles \
                ./GeneratedFiles/release \
 			   $(ProjectDir)/. \

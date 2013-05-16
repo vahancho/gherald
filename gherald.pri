@@ -5,7 +5,6 @@ HEADERS += ./gui/dlgLogin.h \
            ./gui/trayIcon.h \
            ./core/defaultManager.h \
            ./core/versionManager.h \
-           ./core/version.h \
            ./core/login.h \
            ./core/propertyTable.h \
            ./parser/mailEntry.h \
@@ -22,7 +21,6 @@ SOURCES += ./main.cpp \
            ./gui/trayIcon.cpp \
            ./core/defaultManager.cpp \
            ./core/versionManager.cpp \
-           ./core/version.cpp \
            ./core/login.cpp \
            ./core/propertyTable.cpp \
            ./parser/mailEntry.cpp \

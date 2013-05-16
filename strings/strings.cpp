@@ -71,7 +71,6 @@ namespace str
     const char *sTagTitle = "title";
 
     // Version related strings
-    const char *sVersionUrl = "http://gherald.sourceforge.net/version";
-    const char *sVersion = "0.3.1";
+    const char *sVersionUrl = "http://gherald.sourceforge.net/version2";
 
 } // namespace str
