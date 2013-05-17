@@ -44,21 +44,44 @@ const int defInterval = 2;
 const int iconInterval = 700;
 const unsigned long sleepInterval = 3000;
 
-/// Implements the sleeper class.
-class Sleeper : public QThread
-{
-public:
+Scheduler::Scheduler(Notifier *notifier)
+    :
+        m_notifier(notifier)
+{}
 
-    static void msleep(unsigned long msecs)
-    {
-        QThread::msleep(msecs);
+void Scheduler::setMail(const QList<core::MailEntry> &mail)
+{
+    m_mail = mail;
+}
+
+void Scheduler::show()
+{
+    if (m_mail.count() > 0) {
+        m_notifier->show();
+        m_current = 0;
+        showNext();
     }
-};
+}
+
+void Scheduler::showNext()
+{
+    if (m_current < m_mail.count()) {
+        QString countReport = TRANSLATE(str::sMsgOfMsg).arg(m_current + 1).arg(m_mail.count());
+        m_notifier->setHtml(TRANSLATE(str::sReportTmpl).arg(countReport).arg(m_mail.at(m_current).toString()));
+        m_notifier->adjustGeometry();
+        QApplication::processEvents(QEventLoop::ExcludeUserInputEvents);
+        m_current++;
+        QTimer::singleShot(sleepInterval, this, SLOT(showNext()));
+    }
+}
+
+//////////////////////////////////////////////////////////////////////////////
 
 TrayIcon::TrayIcon()
     :
         m_translator(0),
-        m_lastMailCount(0)
+        m_lastMailCount(0),
+        m_schduler(&m_notifier)
 {
     connect(this, SIGNAL(activated(QSystemTrayIcon::ActivationReason)),
             this, SLOT(trayIconActivated(QSystemTrayIcon::ActivationReason)));
@@ -347,22 +370,9 @@ void TrayIcon::onStatusChanged()
 
 void TrayIcon::onShowNotification()
 {
-    m_notifier.show();
-
-    int count = m_parser->newMailCount();
     const QList<core::MailEntry> &mails = m_parser->mailEntries();
-
-    for (int i = 0; i < mails.size(); ++i)
-    {
-        QString countReport = TRANSLATE(str::sMsgOfMsg).arg(i + 1).arg(count);
-
-        m_notifier.setHtml(TRANSLATE(str::sReportTmpl).arg(countReport).arg(mails.at(i).toString()));
-
-        m_notifier.adjustGeometry();
-
-        QApplication::processEvents(QEventLoop::ExcludeUserInputEvents);
-        Sleeper::msleep(sleepInterval);
-    }
+    m_schduler.setMail(mails);
+    m_schduler.show();
 }
 
 void TrayIcon::onOptions()
@@ -451,3 +461,4 @@ void TrayIcon::onAbout()
 }
 
 } // namespace gui
+

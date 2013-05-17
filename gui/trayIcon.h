@@ -27,6 +27,7 @@
 #include "../core/defaultManager.h"
 #include "../core/versionManager.h"
 #include "../core/login.h"
+#include "../parser/parser.h"
 
 class QTranslator;
 
@@ -37,6 +38,30 @@ namespace core
 
 namespace gui
 {
+
+/// Implements iterative notification.
+class Scheduler : public QObject
+{
+    Q_OBJECT
+public:
+    Scheduler(Notifier *notifier);
+
+    /// Sets the list of mail items to show.
+    void setMail(const QList<core::MailEntry> &mail);
+
+    /// Show iteratively all mail items.
+    void show();
+
+private slots:
+    void showNext();
+
+private:
+    Notifier *m_notifier;
+    QList<core::MailEntry> m_mail;
+    int m_current;
+};
+
+///////////////////////////////////////////////////////////////////////////////
 
 /// This class implements the main GUI of the application.
 class TrayIcon : public QSystemTrayIcon
@@ -106,6 +131,8 @@ private:
 
     /// The notifier window.
     Notifier m_notifier;
+
+    Scheduler m_schduler;
 
     /// The HTTP parser.
     core::Parser *m_parser;
