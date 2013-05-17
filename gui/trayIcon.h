@@ -24,10 +24,10 @@
 #include <QSystemTrayIcon>
 #include <QTimer>
 #include "notifier.h"
-#include "../core/defaultManager.h"
-#include "../core/versionManager.h"
-#include "../core/login.h"
-#include "../parser/parser.h"
+#include <core/defaultManager.h>
+#include <core/versionManager.h>
+#include <core/login.h>
+#include <parser/parser.h>
 
 class QTranslator;
 

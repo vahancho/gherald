@@ -32,9 +32,9 @@
 #include "trayIcon.h"
 #include "dlgLogin.h"
 #include "dlgOptions.h"
-#include "../parser/atomParser.h"
-#include "../strings/guiStrings.h"
-#include "../strings/strings.h"
+#include <parser/atomParser.h>
+#include <strings/guiStrings.h>
+#include <strings/strings.h>
 
 namespace gui
 {

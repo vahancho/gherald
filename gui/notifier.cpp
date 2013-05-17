@@ -23,7 +23,7 @@
 #include <QAbstractTextDocumentLayout>
 #include <QStyle>
 #include "notifier.h"
-#include "../strings/guiStrings.h"
+#include <strings/guiStrings.h>
 
 namespace gui
 {

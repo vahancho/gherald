@@ -29,7 +29,7 @@
 #include <QComboBox>
 
 #include "dlgOptions.h"
-#include "../strings/guiStrings.h"
+#include <strings/guiStrings.h>
 
 namespace gui
 {

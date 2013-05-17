@@ -25,7 +25,7 @@
 #include <QLineEdit>
 
 #include "dlgLogin.h"
-#include "../strings/guiStrings.h"
+#include <strings/guiStrings.h>
 
 namespace gui
 {
