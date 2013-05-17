@@ -78,7 +78,7 @@ namespace str
     const char *sConnecting = QT_TRANSLATE_NOOP("GHerald", "Connecting to the host...");
     const char *sSending = QT_TRANSLATE_NOOP("GHerald", "Sending request to the server...");
     const char *sReading = QT_TRANSLATE_NOOP("GHerald", "Reading the server's response...");
-    const char *sConnected = QT_TRANSLATE_NOOP("GHerald", "Connected.");
+    const char *sConnected = QT_TRANSLATE_NOOP("GHerald", "Connected");
 
     // Login dialog strings
     const char *sUser = QT_TRANSLATE_NOOP("GHerald", "User name:");
