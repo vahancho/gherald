@@ -20,6 +20,8 @@
 
 #include <QSettings>
 #include <QApplication>
+#include <QDesktopservices>
+#include <QDir>
 #include "defaultManager.h"
 
 namespace core
@@ -41,8 +43,7 @@ void DefaultManager::saveDefaults() const
 
     QSettings defaultsWriter(file(), QSettings::IniFormat);
 
-    while (i != m_properties.constEnd())
-    {
+    while (i != m_properties.constEnd()) {
         defaultsWriter.setValue(i.value().name(), i.value().value());
         ++i;
     }
@@ -50,26 +51,38 @@ void DefaultManager::saveDefaults() const
 
 void DefaultManager::readDefaults()
 {
+    QString settingsFile = file();
+
+    // The old versions settings file was located in the same
+    // directory with the executable. For the sake of compatibility
+    // try to read it from the old location if new file does not exist.
+    // However we will write settings in the new location anyways.
+    if (!QFile::exists(settingsFile)) {
+        settingsFile = QCoreApplication::applicationDirPath() +
+                       '/' + defaultsFileName;
+    }
+
     // Create QSettings object. We use ini format to store the data.
     QSettings defaultsReader(file(), QSettings::IniFormat);
 
     QHash<QString, Property>::iterator i = m_properties.begin();
 
-    while (i != m_properties.end())
-    {
+    while (i != m_properties.end()) {
         QString defaultName = i.key();
         QVariant defaultValue = defaultsReader.value(defaultName);
 
         // Set the new value we read from the file
         setValue(defaultName, defaultValue);
-
         ++i;
     }
 }
 
 QString DefaultManager::file() const
 {
-    return QCoreApplication::applicationDirPath() + '/' + defaultsFileName;
+    QString location =
+        QDesktopServices::storageLocation(QDesktopServices::DataLocation) +
+        '/' + defaultsFileName;
+    return QDir::toNativeSeparators(location);
 }
 
 } // namespace core

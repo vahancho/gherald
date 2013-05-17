@@ -19,11 +19,13 @@
 ***************************************************************************/
 
 #include <QtGui/QApplication>
-#include "../gui/trayIcon.h"
+#include <gui/trayIcon.h>
+#include <strings/strings.h>
 
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
+    a.setApplicationName(str::sAppName);
     a.setQuitOnLastWindowClosed(false);
 
     a.setWindowIcon(QIcon(":/icons/app"));
