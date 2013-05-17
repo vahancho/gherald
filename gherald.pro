@@ -2,10 +2,25 @@ message("You are running qmake on gherald.pro file.")
 
 TEMPLATE = app
 TARGET = gherald
-DESTDIR = ./release
 QT += network xml
 
-CONFIG += release
+CONFIG(debug) {
+    message(debug)
+    DESTDIR = ./bin/debug
+}
+CONFIG(release) {
+    message(release)
+    DESTDIR = ./bin/release
+}
+CONFIG(debug, debug|release) {
+    message("debug, debug|release")
+    DESTDIR = ./bin/debug
+}
+CONFIG(release, debug|release) {
+    message("release, debug|release")
+    DESTDIR = ./bin/release
+}
+
 win32:CONFIG += embed_manifest_exe
 
 # Define the application version and version string.
@@ -16,12 +31,10 @@ INCLUDEPATH += ./GeneratedFiles \
                ./GeneratedFiles/release \
 			   $(ProjectDir)/. \
                .
-win32:LIBS += -lqtmain -lQtCore4 -lQtGui4 -lQtNetwork4
-unix:LIBS += -lQtCore -lQtGui -lQtNetwork
 
 DEPENDPATH += .
 MOC_DIR += ./GeneratedFiles/release
-OBJECTS_DIR += release
+OBJECTS_DIR += obj
 UI_DIR += ./GeneratedFiles
 RCC_DIR += ./GeneratedFiles
 
