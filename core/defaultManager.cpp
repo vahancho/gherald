@@ -31,51 +31,8 @@ const QString defaultsFileName("settings.ini");
 
 DefaultManager::DefaultManager(QObject *parent)
     :
-        PropertyTable(parent)
+        QObject(parent)
 {}
-
-DefaultManager::~DefaultManager()
-{}
-
-void DefaultManager::saveDefaults() const
-{
-    QHash<QString, Property>::const_iterator i = m_properties.constBegin();
-
-    QSettings defaultsWriter(file(), QSettings::IniFormat);
-
-    while (i != m_properties.constEnd()) {
-        defaultsWriter.setValue(i.value().name(), i.value().value());
-        ++i;
-    }
-}
-
-void DefaultManager::readDefaults()
-{
-    QString settingsFile = file();
-
-    // The old versions settings file was located in the same
-    // directory with the executable. For the sake of compatibility
-    // try to read it from the old location if new file does not exist.
-    // However we will write settings in the new location anyways.
-    if (!QFile::exists(settingsFile)) {
-        settingsFile = QCoreApplication::applicationDirPath() +
-                       '/' + defaultsFileName;
-    }
-
-    // Create QSettings object. We use ini format to store the data.
-    QSettings defaultsReader(file(), QSettings::IniFormat);
-
-    QHash<QString, Property>::iterator i = m_properties.begin();
-
-    while (i != m_properties.end()) {
-        QString defaultName = i.key();
-        QVariant defaultValue = defaultsReader.value(defaultName);
-
-        // Set the new value we read from the file
-        setValue(defaultName, defaultValue);
-        ++i;
-    }
-}
 
 QString DefaultManager::file() const
 {
@@ -83,6 +40,32 @@ QString DefaultManager::file() const
         QDesktopServices::storageLocation(QDesktopServices::DataLocation) +
         '/' + defaultsFileName;
     return QDir::toNativeSeparators(location);
+}
+
+QVariant DefaultManager::default(const QString &name,
+                                 const QVariant &defaultValue) const
+{
+    QString settingsFile = file();
+    QString oldSettingsFile = QCoreApplication::applicationDirPath() +
+                              '/' + defaultsFileName;
+
+    // Settings file of old versions of the tool was located in the same
+    // directory with the executable. For the sake of compatibility
+    // copy it from the old location to the new one.
+    if (!QFile::exists(settingsFile) && QFile::exists(oldSettingsFile)) {
+        QString oldSettings = QCoreApplication::applicationDirPath() +
+                              '/' + defaultsFileName;
+        QFile::copy(oldSettings, settingsFile);
+    }
+
+    QSettings defaults(settingsFile, QSettings::IniFormat);
+    return defaults.value(name, defaultValue);
+}
+
+void DefaultManager::setDefault(const QString &name, const QVariant &value)
+{
+    QSettings defaults(file(), QSettings::IniFormat);
+    defaults.setValue(name, value);
 }
 
 } // namespace core

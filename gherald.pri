@@ -6,7 +6,6 @@ HEADERS += ./gui/dlgLogin.h \
            ./core/defaultManager.h \
            ./core/versionManager.h \
            ./core/login.h \
-           ./core/propertyTable.h \
            ./parser/mailEntry.h \
            ./parser/parser.h \
            ./parser/atomParser.h \
@@ -22,7 +21,6 @@ SOURCES += ./main.cpp \
            ./core/defaultManager.cpp \
            ./core/versionManager.cpp \
            ./core/login.cpp \
-           ./core/propertyTable.cpp \
            ./parser/mailEntry.cpp \
            ./parser/parser.cpp \
            ./parser/atomParser.cpp \

@@ -21,7 +21,8 @@
 #ifndef __DEFAULTMANAGER_H__
 #define __DEFAULTMANAGER_H__
 
-#include "propertyTable.h"
+#include <QObject>
+#include <QVariant>
 
 namespace core
 {
@@ -31,7 +32,7 @@ namespace core
     This class stores the application defaults - the application settings.
     Defaults can be saved and restored from session to session.
 */
-class DefaultManager : public PropertyTable
+class DefaultManager : public QObject
 {
     Q_OBJECT
 
@@ -40,14 +41,9 @@ public:
     /// Default constructor
     DefaultManager(QObject *parent = 0);
 
-    /// Destructor
-    ~DefaultManager();
-
-    /// Save defaults to the file.
-    void saveDefaults() const;
-
-    /// Reads defaults from the file.
-    void readDefaults();
+    QVariant default(const QString &name,
+                     const QVariant &defaultValue = QVariant()) const;
+    void setDefault(const QString &name, const QVariant &value);
 
 private:
 
