@@ -25,6 +25,8 @@
 #include "notifier.h"
 #include <strings/guiStrings.h>
 
+static const int sleepInterval = 3000;
+
 namespace gui
 {
 
@@ -75,9 +77,6 @@ void Notifier::onTimer()
 void Notifier::showEvent(QShowEvent *event)
 {
     setWindowModality(Qt::ApplicationModal);
-
-    QTextBrowser::showEvent(event);
-
     adjustGeometry();
 
     setWindowOpacity(1.0);
@@ -87,6 +86,21 @@ void Notifier::showEvent(QShowEvent *event)
     raise();
 
     setWindowModality(Qt::NonModal);
+
+    m_current = 0;
+    showNext();
+
+    QTextBrowser::showEvent(event);
+}
+
+void Notifier::showNext()
+{
+    if (m_current < m_messages.count()) {
+        setHtml(m_messages.at(m_current++));
+        adjustGeometry();
+        QApplication::processEvents(QEventLoop::ExcludeUserInputEvents);
+        QTimer::singleShot(sleepInterval, this, SLOT(showNext()));
+    }
 }
 
 void Notifier::enterEvent(QEvent *event)
@@ -167,6 +181,11 @@ void Notifier::adjustGeometry()
 
     // Now set the new position
     setGeometry(QRect(position, mySize));
+}
+
+void Notifier::setMessages(const QStringList &messages)
+{
+    m_messages = messages;
 }
 
 //////////////////////////////////////////////////////////////////////////

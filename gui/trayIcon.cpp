@@ -42,46 +42,11 @@ namespace gui
 // Default values
 const int defInterval = 2;
 const int iconInterval = 700;
-const unsigned long sleepInterval = 3000;
-
-Scheduler::Scheduler(Notifier *notifier)
-    :
-        m_notifier(notifier)
-{}
-
-void Scheduler::setMail(const QList<core::MailEntry> &mail)
-{
-    m_mail = mail;
-}
-
-void Scheduler::show()
-{
-    if (m_mail.count() > 0) {
-        m_notifier->show();
-        m_current = 0;
-        showNext();
-    }
-}
-
-void Scheduler::showNext()
-{
-    if (m_current < m_mail.count()) {
-        QString countReport = TRANSLATE(str::sMsgOfMsg).arg(m_current + 1).arg(m_mail.count());
-        m_notifier->setHtml(TRANSLATE(str::sReportTmpl).arg(countReport).arg(m_mail.at(m_current).toString()));
-        m_notifier->adjustGeometry();
-        QApplication::processEvents(QEventLoop::ExcludeUserInputEvents);
-        m_current++;
-        QTimer::singleShot(sleepInterval, this, SLOT(showNext()));
-    }
-}
-
-//////////////////////////////////////////////////////////////////////////////
 
 TrayIcon::TrayIcon()
     :
         m_translator(0),
-        m_lastMailCount(0),
-        m_schduler(&m_notifier)
+        m_lastMailCount(0)
 {
     connect(this, SIGNAL(activated(QSystemTrayIcon::ActivationReason)),
             this, SLOT(trayIconActivated(QSystemTrayIcon::ActivationReason)));
@@ -145,7 +110,7 @@ void TrayIcon::createMenu()
     act->setFont(actionFont);
 
     menu->addAction(QIcon(":icons/check"), TRANSLATE(str::sMenuCheckMail), m_parser, SLOT(parse()));
-    menu->addAction(QIcon(":icons/refresh"), TRANSLATE(str::sMenuTellAgain), this, SLOT(onShowNotification()));
+    menu->addAction(QIcon(":icons/refresh"), TRANSLATE(str::sMenuTellAgain), &m_notifier, SLOT(show()));
     menu->addAction(QIcon(":icons/user"), TRANSLATE(str::sMenuChangeUser), this, SLOT(onChangeUser()));
     menu->addAction(QIcon(":icons/options"), TRANSLATE(str::sMenuOptions), this, SLOT(onOptions()));
     menu->addAction(QIcon(":icons/about"), TRANSLATE(str::sMenuAbout), this, SLOT(onAbout()));
@@ -235,7 +200,7 @@ void TrayIcon::onParsingDone(bool error)
         } else {
             setIcon(m_noUnreadIcon);
             setToolTip(TRANSLATE(str::sNoUnreadMail));
-            m_notifier.setHtml(QString(str::sReportTmplNoMail).arg(TRANSLATE(str::sUnreadLong)));
+            m_notifier.setMessages(QStringList() << QString(str::sReportTmplNoMail).arg(TRANSLATE(str::sUnreadLong)));
             m_iconTimer.stop();
         }
 
@@ -259,7 +224,7 @@ void TrayIcon::onParsingDone(bool error)
         setIcon(m_failureIcon);
 
         status = QString(str::sStatusMessageTmpl).arg(status);
-        m_notifier.setHtml(QString(str::sReportTmplNoMail).arg(status));
+        m_notifier.setMessages(QStringList() << QString(str::sReportTmplNoMail).arg(status));
 
         if (m_parser->needLogin()) {
             DlgLogin dlg;
@@ -320,9 +285,16 @@ void TrayIcon::onStatusChanged()
 
 void TrayIcon::onShowNotification()
 {
+    QStringList messages;
     const QList<core::MailEntry> &mails = m_parser->mailEntries();
-    m_schduler.setMail(mails);
-    m_schduler.show();
+    const int count = mails.count();
+    for (int i = 0; i < count; ++i) {
+        QString countReport = TRANSLATE(str::sMsgOfMsg).arg(i + 1).arg(count);
+        QString m(TRANSLATE(str::sReportTmpl).arg(countReport).arg(mails.at(i).toString()));
+        messages.append(m);
+    }
+    m_notifier.setMessages(messages);
+    m_notifier.show();
 }
 
 void TrayIcon::onOptions()
@@ -409,7 +381,7 @@ void TrayIcon::onAbout()
     if (m_versionManager.updatesAvailable())
         about += TRANSLATE(str::sNewVersion).arg(m_versionManager.updatedVersion());
 
-    m_notifier.setHtml(QString(str::sReportTmplNoMail).arg(about));
+    m_notifier.setMessages(QStringList() << QString(str::sReportTmplNoMail).arg(about));
     m_notifier.show();
 }
 

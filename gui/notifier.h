@@ -33,20 +33,12 @@ class Notifier : public QTextBrowser
     Q_OBJECT
 
 public:
-
     Notifier(QWidget *parent = 0);
-
     ~Notifier();
 
-    /// Adjust the window geometry.
-    /*!
-        This function resize the window to fit its content and move the window
-        for preventing it fall out of screen.
-    */
-    void adjustGeometry();
+    void setMessages(const QStringList &messages);
 
 protected:
-
     /// Handle the show event.
     void showEvent(QShowEvent *event);
 
@@ -65,11 +57,18 @@ protected:
     void resizeEvent(QResizeEvent *event);
 
 private slots:
-
     /// Decrease the window opacity.
     void onTimer();
 
+    void showNext();
+
 private:
+    /// Adjust the window geometry.
+    /*!
+        This function resize the window to fit its content and move the window
+        for preventing it fall out of screen.
+    */
+    void adjustGeometry();
 
     /// The hide button class for notifier window.
     class HideButton : public QToolButton
@@ -81,6 +80,12 @@ private:
         /// Highlights the button frame when mouse is over.
         bool event(QEvent *event);
     };
+
+    /// List of messages to show.
+    QStringList m_messages;
+
+    /// Current message index.
+    int m_current;
 
     /// The hide button for this window.
     HideButton *m_hideButton;
