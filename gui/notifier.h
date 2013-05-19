@@ -61,6 +61,7 @@ private slots:
     void onTimer();
 
     void showNext();
+    void showPrevious();
 
 private:
     /// Adjust the window geometry.
@@ -70,11 +71,11 @@ private:
     */
     void adjustGeometry();
 
-    /// The hide button class for notifier window.
-    class HideButton : public QToolButton
+    /// The button class for notifier window's navigation.
+    class NavigationButton : public QToolButton
     {
     public:
-        HideButton(QWidget *parent = 0);
+        NavigationButton(QWidget *parent = 0);
 
     protected:
         /// Highlights the button frame when mouse is over.
@@ -87,11 +88,16 @@ private:
     /// Current message index.
     int m_current;
 
-    /// The hide button for this window.
-    HideButton *m_hideButton;
+    /// Navigation buttons for this window.
+    NavigationButton *m_hideButton;
+    NavigationButton *m_nextButton;
+    NavigationButton *m_prevButton;
 
     /// Timer event handler to change the window transparency.
     QTimer m_timer;
+
+    /// Timer that responsible for messages iteration in the view.
+    QTimer m_iterationTimer;
 
     /// The mouse press offset from the top left corner.
     QPoint m_offset;

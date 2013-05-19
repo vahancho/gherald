@@ -46,7 +46,11 @@ Notifier::Notifier(QWidget * parent)
     setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
 
     m_timer.setInterval(opacityInterval);
-    connect(&m_timer, SIGNAL(timeout()), this, SLOT(onTimer()));
+    connect(&m_timer, SIGNAL(timeout()), SLOT(onTimer()));
+
+    m_iterationTimer.setSingleShot(true);
+    m_iterationTimer.setInterval(sleepInterval);
+    connect(&m_iterationTimer, SIGNAL(timeout()), SLOT(showNext()));
 
     resize(300, 100);
 
@@ -54,8 +58,21 @@ Notifier::Notifier(QWidget * parent)
     setStyleSheet("background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,"
                   "stop: 0 #E0E0E0, stop: 1 #FFFFFF);");
 
-    // Create and setup hide button
-    m_hideButton = new HideButton(this);
+    // Create and setup hide, next and previous buttons.
+    m_hideButton = new NavigationButton(this);
+    m_hideButton->setIcon(QIcon(":icons/close"));
+    m_hideButton->setToolTip(qApp->translate("GHerald", str::sHideBtnToolTip));
+    connect(m_hideButton, SIGNAL(clicked()), SLOT(hide()));
+
+    m_nextButton = new NavigationButton(this);
+    m_nextButton->setIcon(QIcon(":icons/right"));
+    m_nextButton->setToolTip(qApp->translate("GHerald", "Next message"));
+    connect(m_nextButton, SIGNAL(clicked()), SLOT(showNext()));
+
+    m_prevButton = new NavigationButton(this);
+    m_prevButton->setIcon(QIcon(":icons/left"));
+    m_prevButton->setToolTip(qApp->translate("GHerald", "Previous message"));
+    connect(m_prevButton, SIGNAL(clicked()), SLOT(showPrevious()));
 }
 
 Notifier::~Notifier()
@@ -90,18 +107,38 @@ void Notifier::showEvent(QShowEvent *event)
 
     setWindowModality(Qt::NonModal);
 
+    // Initiate iteration of messages.
+    int count = m_messages.count();
+    m_prevButton->setVisible(count > 1);
+    m_nextButton->setVisible(count > 1);
     m_current = 0;
-    showNext();
+    QTimer::singleShot(10, this, SLOT(showNext()));
 }
 
 void Notifier::showNext()
 {
-    if (m_current < m_messages.count()) {
+    if (m_current >= 0 && m_current < m_messages.count()) {
+        // If sender is not a button, we are in automatic iteration mode.
+        bool automatic = (qobject_cast<QToolButton *>(sender()) == 0);
+
         setHtml(m_messages.at(m_current++));
         adjustGeometry();
         QApplication::processEvents(QEventLoop::ExcludeUserInputEvents);
-        QTimer::singleShot(sleepInterval, this, SLOT(showNext()));
+        if (automatic) {
+            m_iterationTimer.start();
+        } else {
+            m_iterationTimer.stop();
+        }
+
+        m_prevButton->setEnabled(m_current > 1);
+        m_nextButton->setEnabled(m_current < m_messages.count());
     }
+}
+
+void Notifier::showPrevious()
+{
+    m_current = qMax(0, m_current - 2);
+    showNext();
 }
 
 void Notifier::enterEvent(QEvent *event)
@@ -141,13 +178,20 @@ void Notifier::mouseReleaseEvent(QMouseEvent* event)
 
 void Notifier::resizeEvent(QResizeEvent *event)
 {
-    QSize sz = m_hideButton->sizeHint();
-
     int frameWidth = style()->pixelMetric(QStyle::PM_DefaultFrameWidth);
 
-    // Move the button to the right top edge of the window
-    m_hideButton->move( rect().right() - frameWidth - sz.width(),
-                        rect().top() + frameWidth);
+    QSize sz = m_hideButton->sizeHint();
+    // Move the button to the right top edge of the window.
+    m_hideButton->move(rect().right() - frameWidth - sz.width(),
+                       rect().top() + frameWidth);
+    QPoint p = m_hideButton->geometry().topLeft();
+
+    sz = m_nextButton->sizeHint();
+    m_nextButton->move(p.x() - sz.width(), frameWidth);
+    p = m_nextButton->geometry().topLeft();
+
+    sz = m_prevButton->sizeHint();
+    m_prevButton->move(p.x() - sz.width(), frameWidth);
 
     QTextBrowser::resizeEvent(event);
 }
@@ -190,7 +234,7 @@ void Notifier::setMessages(const QStringList &messages)
 }
 
 //////////////////////////////////////////////////////////////////////////
-// Hide Button implementation
+// Navigation Button implementation
 
 const QString sStyleNormal("QToolButton {background-color: #E0E0E0;"
                            "border: none;"
@@ -200,21 +244,17 @@ const QString sStyleHighlight("QToolButton {background-color: #E0E0E0;"
                               "border: 1px solid #FF9933;"
                               "padding: 0px; }");
 
-Notifier::HideButton::HideButton(QWidget *parent)
+Notifier::NavigationButton::NavigationButton(QWidget *parent)
     :
         QToolButton(parent)
 {
-    setIcon(QIcon(":icons/close"));
     setCursor(Qt::ArrowCursor);
-    setToolTip(qApp->translate("GHerald", str::sHideBtnToolTip));
 
     // Customize the button style
     setStyleSheet(sStyleNormal);
-
-    connect(this, SIGNAL(clicked()), parentWidget(), SLOT(hide()));
 }
 
-bool Notifier::HideButton::event(QEvent *event)
+bool Notifier::NavigationButton::event(QEvent *event)
 {
     if (event->type() == QEvent::Enter)
         setStyleSheet(sStyleHighlight);

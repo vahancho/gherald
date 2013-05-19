@@ -13,5 +13,7 @@
 		<file alias="refresh" >icon_refresh.png</file>
 		<file alias="about" >icon_about.png</file>
 		<file alias="warning" >icon_warning.png</file>
+		<file alias="left" >icon_left.png</file>
+		<file alias="right" >icon_right.png</file>
  	</qresource>
 </RCC>
