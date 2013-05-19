@@ -103,7 +103,6 @@ TrayIcon::TrayIcon()
     connect(m_parser, SIGNAL(done(bool)), this, SLOT(onParsingDone(bool)));
     connect(m_parser, SIGNAL(statusChanged()), this, SLOT(onStatusChanged()));
 
-    registerDefaults();
     restoreState();
 
     // Timers
@@ -155,64 +154,33 @@ void TrayIcon::createMenu()
     menu->addAction(QIcon(":icons/exit"), TRANSLATE(str::sMenuExit), qApp, SLOT(quit()));
 }
 
-void TrayIcon::registerDefaults()
-{
-    // Set and read defaults.
-    m_defaultManager.addProperty(str::sDefInterval, int(defInterval), int(defInterval));
-
-    // The notifier window position. Default value is screen center.
-    QPoint center = QApplication::desktop()->screenGeometry().center();
-    m_defaultManager.addProperty(str::sDefNotifyPos, center, center);
-
-    // The empty login data.
-    m_defaultManager.addProperty(str::sDefLogin, QString(), QString());
-
-    // Sound File
-    m_defaultManager.addProperty(str::sDefSoundFile, QString(), QString());
-    m_defaultManager.addProperty(str::sDefSoundPlay, false, false);
-
-    // Localization
-    m_defaultManager.addProperty(str::sDefLanguage, QString(str::sLanguage),
-                                 QString(str::sLanguage));
-
-    QMap<QString, QVariant> languages;
-    languages[str::sLanguageEnglishTitle] = str::sLanguageEnglishKey;
-    languages[str::sLanguageRussianTitle] = str::sLanguageRussianKey;
-
-    m_defaultManager.addProperty(str::sDefLanguages, languages, languages);
-}
-
 void TrayIcon::saveState()
 {
-    m_defaultManager.setValue(str::sDefNotifyPos, m_notifier.geometry().topLeft());
-    m_defaultManager.setValue(str::sDefLogin, m_login.encode());
-
-    m_defaultManager.saveDefaults();
+    m_defaultManager.setDefault(str::sDefNotifyPos, m_notifier.geometry().topLeft());
+    m_defaultManager.setDefault(str::sDefLogin, m_login.encode());
 }
 
 void TrayIcon::restoreState()
 {
-    // Read settings
-    m_defaultManager.readDefaults();
-
     // Notifier position
-    m_notifier.move(m_defaultManager.value(str::sDefNotifyPos).toPoint());
-
-    int interval = m_defaultManager.value(str::sDefInterval).toInt();
+    QPoint center = QApplication::desktop()->screenGeometry().center();
+    m_notifier.move(m_defaultManager.default(str::sDefNotifyPos, center).toPoint());
 
     // Timers
+    int interval = m_defaultManager.default(str::sDefInterval, defInterval).toInt();
     m_parseTimer.setInterval(qMax(interval, 1) * 60000);
 
     // Login
-    QString login = m_defaultManager.value(str::sDefLogin).toString();
-
+    QString login = m_defaultManager.default(str::sDefLogin, QString()).toString();
     m_login.decodeAndSet(login);
-
     m_parser->setUser(m_login.user());
     m_parser->setPassword(m_login.password());
 
     // Localization
-    QString language = m_defaultManager.value(str::sDefLanguage).toString();
+    QMap<QString, QVariant> languages;
+    languages[str::sLanguageEnglishTitle] = str::sLanguageEnglishKey;
+    languages[str::sLanguageRussianTitle] = str::sLanguageRussianKey;
+    QString language = m_defaultManager.default(str::sDefLanguage, QString(str::sLanguage)).toString();
 
     translate(language);
 }
@@ -287,10 +255,10 @@ void TrayIcon::onParsingDone(bool error)
         {
             // Play sound and blink, blink the icon and show notification.
 
-            if (m_defaultManager.value(str::sDefSoundPlay).toBool()
+            if (m_defaultManager.default(str::sDefSoundPlay, false).toBool()
                 && QSound::isAvailable())
             {
-                QSound::play(m_defaultManager.value(str::sDefSoundFile).toString());
+                QSound::play(m_defaultManager.default(str::sDefSoundFile).toString());
             }
 
             m_iconTimer.start();
@@ -387,16 +355,19 @@ void TrayIcon::onOptions()
 #endif
 
     // Set timeout
-    dlg.setTimout(m_defaultManager.value(str::sDefInterval).toInt());
+    dlg.setTimout(m_defaultManager.default(str::sDefInterval).toInt());
 
     // Set sound file settings
-    dlg.setSoundFilePath(m_defaultManager.value(str::sDefSoundFile).toString());
-    dlg.setPlaySound(m_defaultManager.value(str::sDefSoundPlay).toBool());
+    dlg.setSoundFilePath(m_defaultManager.default(str::sDefSoundFile).toString());
+    dlg.setPlaySound(m_defaultManager.default(str::sDefSoundPlay, false).toBool());
 
     // Set language settings.
-    QMap<QString, QVariant> languages = m_defaultManager.value(str::sDefLanguages).toMap();
+    QMap<QString, QVariant> defLanguages;
+    defLanguages[str::sLanguageEnglishTitle] = str::sLanguageEnglishKey;
+    defLanguages[str::sLanguageRussianTitle] = str::sLanguageRussianKey;
+    QMap<QString, QVariant> languages = m_defaultManager.default(str::sDefLanguages, defLanguages).toMap();
     QStringList languageStrings = languages.keys();
-    QString currentLanguage = languages.key(m_defaultManager.value(str::sDefLanguage).toString());
+    QString currentLanguage = languages.key(m_defaultManager.default(str::sDefLanguage).toString());
     int currentIndex = languageStrings.indexOf(currentLanguage);
 
     dlg.setLanguages(languages.keys(), currentIndex);
@@ -417,22 +388,19 @@ void TrayIcon::onOptions()
 #endif
 
         // Set the mail checking interval
-        m_defaultManager.setValue(str::sDefInterval, dlg.timout());
+        m_defaultManager.setDefault(str::sDefInterval, dlg.timout());
         m_parseTimer.setInterval(dlg.timout() * 60000);
 
         // Set the sound file path
-        m_defaultManager.setValue(str::sDefSoundFile, dlg.soundFilePath());
-        m_defaultManager.setValue(str::sDefSoundPlay, dlg.playSound());
+        m_defaultManager.setDefault(str::sDefSoundFile, dlg.soundFilePath());
+        m_defaultManager.setDefault(str::sDefSoundPlay, dlg.playSound());
 
         // Set the current language
         QVariant currentLanguageKey = languages.value(dlg.currentLanguage());
-        m_defaultManager.setValue(str::sDefLanguage, currentLanguageKey);
+        m_defaultManager.setDefault(str::sDefLanguage, currentLanguageKey);
 
         // Translate GUI
         translate(currentLanguageKey.toString());
-
-        // Save defaults immediately.
-        m_defaultManager.saveDefaults();
     }
 }
 
@@ -445,7 +413,8 @@ void TrayIcon::trayIconActivated(QSystemTrayIcon::ActivationReason reason)
 void TrayIcon::onViewInbox()
 {
     // Provide password as a plain text here in url. This is not so safe!
-    QString urlStr = QString(str::sMailBoxUrl).arg(m_parser->user()).arg(m_parser->password());
+    QString urlStr = QString(str::sMailBoxUrl).arg(m_parser->user())
+                                              .arg(m_parser->password());
     QDesktopServices::openUrl(QUrl(urlStr, QUrl::TolerantMode));
 }
 

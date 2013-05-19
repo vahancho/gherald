@@ -114,9 +114,6 @@ private:
     /// Creates context menu.
     void createMenu();
 
-    /// Registers application defaults.
-    void registerDefaults();
-
     /// Saves the application state.
     void saveState();
 
