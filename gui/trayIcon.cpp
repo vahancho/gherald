@@ -221,18 +221,18 @@ void TrayIcon::onIconTimer()
 
 void TrayIcon::onParsingDone(bool error)
 {
-    if (!error)
-    {
+    if (m_notifier.isVisible()) {
+        return;
+    }
+
+    if (!error) {
         int count = m_parser->newMailCount();
 
         // Set the correct icon and tool tip.
-        if (count > 0)
-        {
+        if (count > 0) {
             setIcon(m_newMailIcon);
             setToolTip(TRANSLATE(str::sUnreadConversations).arg(count));
-        }
-        else
-        {
+        } else {
             setIcon(m_noUnreadIcon);
             setToolTip(TRANSLATE(str::sNoUnreadMail));
             m_notifier.setHtml(QString(str::sReportTmplNoMail).arg(TRANSLATE(str::sUnreadLong)));
@@ -240,13 +240,10 @@ void TrayIcon::onParsingDone(bool error)
         }
 
         // Show or not the notification?
-        if (count > m_lastMailCount)
-        {
+        if (count > m_lastMailCount) {
             // Play sound and blink, blink the icon and show notification.
-
             if (m_defaultManager.default(str::sDefSoundPlay, false).toBool()
-                && QSound::isAvailable())
-            {
+                && QSound::isAvailable()) {
                 QSound::play(m_defaultManager.default(str::sDefSoundFile).toString());
             }
 
@@ -255,9 +252,7 @@ void TrayIcon::onParsingDone(bool error)
         }
 
         m_lastMailCount = count;
-    }
-    else
-    {
+    } else {
         QString status = m_parser->status();
 
         setToolTip(status);
@@ -266,36 +261,34 @@ void TrayIcon::onParsingDone(bool error)
         status = QString(str::sStatusMessageTmpl).arg(status);
         m_notifier.setHtml(QString(str::sReportTmplNoMail).arg(status));
 
-        if (m_parser->needLogin())
-        {
+        if (m_parser->needLogin()) {
             DlgLogin dlg;
             dlg.setUser(m_parser->user());
             dlg.setPassword(m_parser->password());
 
-            if (dlg.exec() == QDialog::Accepted)
-            {
+            if (dlg.exec() == QDialog::Accepted) {
                 // Set user data for the parser
                 m_parser->setUser(dlg.user());
                 m_parser->setPassword(dlg.password());
 
-                if (dlg.saveLogin())
-                {
+                if (dlg.saveLogin()) {
                     // Store the user data for future saving.
                     m_login.setUser(dlg.user());
                     m_login.setPassword(dlg.password());
                 }
 
                 // Restart parsing with new user data.
-                if (!m_parseTimer.isActive())
-                m_parseTimer.start();
+                if (!m_parseTimer.isActive()) {
+                    m_parseTimer.start();
+                }
 
                 m_parser->parse();
-            }
-            else
+            } else {
                 m_parseTimer.stop();
-        }
-        else
+            }
+        } else {
             m_notifier.show();
+        }
     }
 }
 
