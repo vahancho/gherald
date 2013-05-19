@@ -26,6 +26,7 @@
 #include <strings/guiStrings.h>
 
 static const int sleepInterval = 3000;
+static const int opacityInterval = 200;
 
 namespace gui
 {
@@ -44,7 +45,7 @@ Notifier::Notifier(QWidget * parent)
     setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
 
-    m_timer.setInterval(100);
+    m_timer.setInterval(opacityInterval);
     connect(&m_timer, SIGNAL(timeout()), this, SLOT(onTimer()));
 
     resize(300, 100);
@@ -76,10 +77,12 @@ void Notifier::onTimer()
 
 void Notifier::showEvent(QShowEvent *event)
 {
-    setWindowModality(Qt::ApplicationModal);
-    adjustGeometry();
+    QTextBrowser::showEvent(event);
 
+    setWindowModality(Qt::ApplicationModal);
     setWindowOpacity(1.0);
+
+    adjustGeometry();
     m_timer.start();
 
     activateWindow();
@@ -89,8 +92,6 @@ void Notifier::showEvent(QShowEvent *event)
 
     m_current = 0;
     showNext();
-
-    QTextBrowser::showEvent(event);
 }
 
 void Notifier::showNext()
