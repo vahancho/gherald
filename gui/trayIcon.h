@@ -107,9 +107,11 @@ private slots:
     void onAbout();
 
 private:
-
     /// Translates the application.
     void translate(const QString &language);
+
+    /// Returns translation file based on language.
+    QString translationFile(const QString &language) const;
 
     /// Creates context menu.
     void createMenu();

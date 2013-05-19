@@ -130,7 +130,6 @@ TrayIcon::~TrayIcon()
 void TrayIcon::createMenu()
 {
     QMenu *menu = contextMenu();
-
     if (menu) {
         menu->clear();
     } else {
@@ -162,59 +161,49 @@ void TrayIcon::saveState()
 
 void TrayIcon::restoreState()
 {
-    // Notifier position
+    // Notifier position.
     QPoint center = QApplication::desktop()->screenGeometry().center();
     m_notifier.move(m_defaultManager.default(str::sDefNotifyPos, center).toPoint());
 
-    // Timers
+    // Timers.
     int interval = m_defaultManager.default(str::sDefInterval, defInterval).toInt();
     m_parseTimer.setInterval(qMax(interval, 1) * 60000);
 
-    // Login
+    // Login.
     QString login = m_defaultManager.default(str::sDefLogin, QString()).toString();
     m_login.decodeAndSet(login);
     m_parser->setUser(m_login.user());
     m_parser->setPassword(m_login.password());
 
-    // Localization
-    QMap<QString, QVariant> languages;
-    languages[str::sLanguageEnglishTitle] = str::sLanguageEnglishKey;
-    languages[str::sLanguageRussianTitle] = str::sLanguageRussianKey;
-    QString language = m_defaultManager.default(str::sDefLanguage, QString(str::sLanguage)).toString();
-
+    // Localization.
+    QString language = m_defaultManager.default(str::sDefLanguage, str::sLanguage).toString();
     translate(language);
 }
 
 void TrayIcon::translate(const QString &language)
 {
-    // Reset previous translation.
-    if (m_translator)
-    {
-        qApp->removeTranslator(m_translator);
+    QTranslator *oldTranslator = m_translator;
+
+    QString file = translationFile(language);
+    m_translator = new QTranslator;
+    if (m_translator->load(file)) {
+        qApp->installTranslator(m_translator);
+        qApp->removeTranslator(oldTranslator);
+        delete oldTranslator;
+    } else {
         delete m_translator;
-        m_translator = 0;
-    }
-
-    // If requested language is not default language, translate GUI strings.
-    if (language != str::sLanguage)
-    {
-        QString translationFile = QLibraryInfo::location(QLibraryInfo::TranslationsPath)
-                                                         + '/'
-                                                         + QString("gherald_%1").arg(language);
-
-        m_translator = new QTranslator;
-
-        if (m_translator->load(translationFile))
-            qApp->installTranslator(m_translator);
-        else
-        {
-            delete m_translator;
-            m_translator = 0;
-        }
+        m_translator = oldTranslator;
     }
 
     // Recreate context menu to update actions strings.
     createMenu();
+}
+
+QString TrayIcon::translationFile(const QString &language) const
+{
+    return QLibraryInfo::location(QLibraryInfo::TranslationsPath) +
+                                  '/' +
+                                  QString("gherald_%1").arg(language);
 }
 
 void TrayIcon::onParseTimer()
@@ -367,7 +356,9 @@ void TrayIcon::onOptions()
     defLanguages[str::sLanguageRussianTitle] = str::sLanguageRussianKey;
     QMap<QString, QVariant> languages = m_defaultManager.default(str::sDefLanguages, defLanguages).toMap();
     QStringList languageStrings = languages.keys();
-    QString currentLanguage = languages.key(m_defaultManager.default(str::sDefLanguage).toString());
+
+    QString currentLanguage =
+        languages.key(m_defaultManager.default(str::sDefLanguage, str::sLanguage).toString());
     int currentIndex = languageStrings.indexOf(currentLanguage);
 
     dlg.setLanguages(languages.keys(), currentIndex);
