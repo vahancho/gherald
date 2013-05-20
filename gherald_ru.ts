@@ -10,8 +10,9 @@
     </message>
     <message>
         <location filename="strings/guiStrings.cpp" line="45"/>
-        <source>Gmail Herald v %1&lt;BR&gt;Copyright © 2010 &lt;a href=&quot;mailto:vahancho@gmail.com&quot;&gt;Vahan Aghajanyan&lt;/a&gt;.&lt;BR&gt;All Rights Reserved.&lt;BR&gt;&lt;BR&gt;Gmail Herald is made possible by the &lt;a href=&quot;http://sourceforge.net/projects/gherald&quot;&gt;GHerald&lt;/a&gt; open source project.</source>
-        <translation>Gmail Herald v %1&lt;BR&gt;Copyright © 2010 &lt;a href=&quot;mailto:vahancho@gmail.com&quot;&gt;Vahan Aghajanyan&lt;/a&gt;.&lt;BR&gt;All Rights Reserved.&lt;BR&gt;&lt;BR&gt;Gmail Herald создан благодаря проекту с открытым кодом &lt;a href=&quot;http://sourceforge.net/projects/gherald&quot;&gt;GHerald&lt;/a&gt;.</translation>
+        <source>Gmail Herald v %1&lt;BR&gt;Copyright © 2010-2013 &lt;a href=&quot;mailto:vahancho@gmail.com&quot;&gt;Vahan Aghajanyan&lt;/a&gt;.&lt;BR&gt;All Rights Reserved.&lt;BR&gt;&lt;BR&gt;Gmail Herald is made possible by the &lt;a href=&quot;http://sourceforge.net/projects/gherald&quot;&gt;GHerald&lt;/a&gt; open source project.</source>
+        <oldsource>Gmail Herald v %1&lt;BR&gt;Copyright © 2010 &lt;a href=&quot;mailto:vahancho@gmail.com&quot;&gt;Vahan Aghajanyan&lt;/a&gt;.&lt;BR&gt;All Rights Reserved.&lt;BR&gt;&lt;BR&gt;Gmail Herald is made possible by the &lt;a href=&quot;http://sourceforge.net/projects/gherald&quot;&gt;GHerald&lt;/a&gt; open source project.</oldsource>
+        <translation>Gmail Herald v %1&lt;BR&gt;Copyright © 2010-2013&lt;a href=&quot;mailto:vahancho@gmail.com&quot;&gt;Vahan Aghajanyan&lt;/a&gt;.&lt;BR&gt;Все права защищены.&lt;BR&gt;&lt;BR&gt;Gmail Herald создан благодаря проекту с открытым кодом &lt;a href=&quot;http://sourceforge.net/projects/gherald&quot;&gt;GHerald&lt;/a&gt;.</translation>
     </message>
     <message>
         <location filename="strings/guiStrings.cpp" line="54"/>
@@ -104,16 +105,26 @@
     </message>
     <message>
         <location filename="strings/guiStrings.cpp" line="103"/>
+        <source>Next message</source>
+        <translation>Следующее сообщение</translation>
+    </message>
+    <message>
+        <location filename="strings/guiStrings.cpp" line="104"/>
+        <source>Previous message</source>
+        <translation>Предыдущее сообщение</translation>
+    </message>
+    <message>
+        <location filename="strings/guiStrings.cpp" line="105"/>
         <source>%1 of %2</source>
         <translation>%1 из %2</translation>
     </message>
     <message>
-        <location filename="strings/guiStrings.cpp" line="104"/>
+        <location filename="strings/guiStrings.cpp" line="106"/>
         <source>OK</source>
         <translation>ОК</translation>
     </message>
     <message>
-        <location filename="strings/guiStrings.cpp" line="105"/>
+        <location filename="strings/guiStrings.cpp" line="107"/>
         <source>Cancel</source>
         <translation>Отмена</translation>
     </message>
@@ -154,8 +165,9 @@
     </message>
     <message>
         <location filename="strings/guiStrings.cpp" line="81"/>
-        <source>Connected.</source>
-        <translation>Соединен.</translation>
+        <source>Connected</source>
+        <oldsource>Connected.</oldsource>
+        <translation>Соединен</translation>
     </message>
     <message>
         <location filename="strings/guiStrings.cpp" line="90"/>
