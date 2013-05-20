@@ -61,17 +61,17 @@ Notifier::Notifier(QWidget * parent)
     // Create and setup hide, next and previous buttons.
     m_hideButton = new NavigationButton(this);
     m_hideButton->setIcon(QIcon(":icons/close"));
-    m_hideButton->setToolTip(qApp->translate("GHerald", str::sHideBtnToolTip));
+    m_hideButton->setToolTip(TRANSLATE(str::sHideBtnToolTip));
     connect(m_hideButton, SIGNAL(clicked()), SLOT(hide()));
 
     m_nextButton = new NavigationButton(this);
     m_nextButton->setIcon(QIcon(":icons/right"));
-    m_nextButton->setToolTip(qApp->translate("GHerald", "Next message"));
+    m_nextButton->setToolTip(TRANSLATE(str::sNextToolTip));
     connect(m_nextButton, SIGNAL(clicked()), SLOT(showNext()));
 
     m_prevButton = new NavigationButton(this);
     m_prevButton->setIcon(QIcon(":icons/left"));
-    m_prevButton->setToolTip(qApp->translate("GHerald", "Previous message"));
+    m_prevButton->setToolTip(TRANSLATE(str::sPrevToolTip));
     connect(m_prevButton, SIGNAL(clicked()), SLOT(showPrevious()));
 }
 
