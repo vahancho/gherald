@@ -29,3 +29,5 @@ SOURCES += ./main.cpp \
 
 #Resource file(s)
 RESOURCES += ./resources/gherald.qrc
+
+TRANSLATIONS += gherald_ru.ts
