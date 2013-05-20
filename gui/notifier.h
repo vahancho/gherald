@@ -63,6 +63,9 @@ private slots:
     void showNext();
     void showPrevious();
 
+protected:
+    void changeEvent(QEvent *event);
+
 private:
     /// Adjust the window geometry.
     /*!

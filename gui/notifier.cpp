@@ -233,6 +233,17 @@ void Notifier::setMessages(const QStringList &messages)
     m_messages = messages;
 }
 
+void Notifier::changeEvent(QEvent *event)
+{
+    if (event->type() == QEvent::LanguageChange) {
+        m_hideButton->setToolTip(TRANSLATE(str::sHideBtnToolTip));
+        m_nextButton->setToolTip(TRANSLATE(str::sNextToolTip));
+        m_prevButton->setToolTip(TRANSLATE(str::sPrevToolTip));
+    } else {
+        QTextBrowser::changeEvent(event);
+    }
+}
+
 //////////////////////////////////////////////////////////////////////////
 // Navigation Button implementation
 
