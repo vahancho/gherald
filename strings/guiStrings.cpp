@@ -100,6 +100,8 @@ namespace str
 
     // Other strings
     const char *sHideBtnToolTip = QT_TRANSLATE_NOOP("GHerald", "Hide window");
+    const char *sNextToolTip = QT_TRANSLATE_NOOP("GHerald", "Next message");
+    const char *sPrevToolTip = QT_TRANSLATE_NOOP("GHerald", "Previous message");
     const char *sMsgOfMsg = QT_TRANSLATE_NOOP("GHerald", "%1 of %2");
     const char *sOk = QT_TRANSLATE_NOOP("GHerald", "OK");
     const char *sCancel = QT_TRANSLATE_NOOP("GHerald", "Cancel");
