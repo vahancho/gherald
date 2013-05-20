@@ -147,17 +147,24 @@ void TrayIcon::restoreState()
 
 void TrayIcon::translate(const QString &language)
 {
-    QTranslator *oldTranslator = m_translator;
-
-    QString file = translationFile(language);
-    m_translator = new QTranslator;
-    if (m_translator->load(file)) {
-        qApp->installTranslator(m_translator);
-        qApp->removeTranslator(oldTranslator);
-        delete oldTranslator;
-    } else {
+    if (language == str::sLanguage) {
+        qApp->removeTranslator(m_translator);
         delete m_translator;
-        m_translator = oldTranslator;
+    } else {
+        QTranslator *oldTranslator = m_translator;
+
+        QString file = translationFile(language);
+        m_translator = new QTranslator;
+        if (m_translator->load(file)) {
+            qApp->installTranslator(m_translator);
+            qApp->removeTranslator(oldTranslator);
+            delete oldTranslator;
+        } else {
+            // If translator file cannot be loades, reset
+            // translator to the old one.
+            delete m_translator;
+            m_translator = oldTranslator;
+        }
     }
 
     // Recreate context menu to update actions strings.
