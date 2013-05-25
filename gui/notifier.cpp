@@ -199,7 +199,7 @@ void Notifier::resizeEvent(QResizeEvent *event)
 void Notifier::adjustGeometry()
 {
     // Adjust to the content size.
-    resize(document()->documentLayout()->documentSize().toSize());
+    resize(document()->documentLayout()->documentSize().toSize() + QSize(2, 0));
 
     // Now we have to decide where to show this pull down. we don't want to
     // show it outside of visible area of the screen
