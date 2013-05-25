@@ -294,9 +294,14 @@ void TrayIcon::onShowNotification()
 {
     QStringList messages;
     const QList<core::MailEntry> &mails = m_parser->mailEntries();
+
+    // New (unread) mail count can be any, however we show only limited
+    // number of items (actually Gmail service shows only first 20
+    // messages).
     const int count = mails.count();
+    const int unreadCount = m_parser->newMailCount();
     for (int i = 0; i < count; ++i) {
-        QString countReport = TRANSLATE(str::sMsgOfMsg).arg(i + 1).arg(count);
+        QString countReport = TRANSLATE(str::sMsgOfMsg).arg(i + 1).arg(unreadCount);
         QString m(TRANSLATE(str::sReportTmpl).arg(countReport).arg(mails.at(i).toString()));
         messages.append(m);
     }
