@@ -35,6 +35,10 @@ namespace str
     extern const char *sReportTmpl;
     extern const char *sAbout;
     extern const char *sNewVersion;
+    extern const char *sNewVersion2;
+    extern const char *sNewVersionTitle;
+    extern const char *sNewVersionQuestion;
+    extern const char *sNoNewVersion;
 
     // Internationalization strings
     extern const char *sLanguageEnglishTitle;

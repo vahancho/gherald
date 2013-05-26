@@ -52,8 +52,16 @@ namespace str
             "Gmail Herald is made possible by the <a href=\"http://sourceforge.net/projects/gherald\">GHerald</a> open source project.");
 
     const char *sNewVersion = QT_TRANSLATE_NOOP("GHerald",
-        "<BR><BR><img src=\":icons/warning\" width=\"16\" height=\"16\"><small> Gmail Herald v %1 is now available! "
-        "You can download new version from the project <a href=\"http://sourceforge.net/projects/gherald/files\">web site</a>.</small>");
+        "<BR><BR><img src=\":icons/warning\" width=\"16\" height=\"16\"><small> Gmail Herald %1 is available. "
+        "You can download new version from the project's <a href=\"http://sourceforge.net/projects/gherald/files\">web site</a>.</small>");
+
+    const char *sNewVersion2 = QT_TRANSLATE_NOOP("GHerald",
+        "Gmail Herald %1 is available.\n"
+        "You can download new version from the project's web site.");
+
+    const char *sNewVersionTitle = QT_TRANSLATE_NOOP("GHerald", "Gmail Herald Update");
+    const char *sNewVersionQuestion = QT_TRANSLATE_NOOP("GHerald", "Do you want to download it now?");
+    const char *sNoNewVersion = QT_TRANSLATE_NOOP("GHerald", "Gmail Herald is up to date.");
 
     // Internationalization strings
     const char *sLanguageEnglishTitle = QT_TRANSLATE_NOOP("GHerald", "English");
