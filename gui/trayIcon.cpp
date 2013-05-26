@@ -28,6 +28,7 @@
 #include <QUrl>
 #include <QSound>
 #include <QDir>
+#include <QMessageBox>
 
 #include "trayIcon.h"
 #include "dlgLogin.h"
@@ -46,7 +47,8 @@ const int iconInterval = 700;
 TrayIcon::TrayIcon()
     :
         m_translator(0),
-        m_lastMailCount(0)
+        m_lastMailCount(0),
+        m_reportNewVersion(false)
 {
     connect(this, SIGNAL(activated(QSystemTrayIcon::ActivationReason)),
             this, SLOT(trayIconActivated(QSystemTrayIcon::ActivationReason)));
@@ -78,6 +80,8 @@ TrayIcon::TrayIcon()
     connect(&m_iconTimer, SIGNAL(timeout()), this, SLOT(onIconTimer()));
 
     m_parser->parse();
+
+    connect(&m_versionManager, SIGNAL(checked()), SLOT(onVersionChecked()));
     m_versionManager.checkForUpdates();
 }
 
@@ -113,6 +117,8 @@ void TrayIcon::createMenu()
     menu->addAction(QIcon(":icons/refresh"), TRANSLATE(str::sMenuTellAgain), &m_notifier, SLOT(show()));
     menu->addAction(QIcon(":icons/user"), TRANSLATE(str::sMenuChangeUser), this, SLOT(onChangeUser()));
     menu->addAction(QIcon(":icons/options"), TRANSLATE(str::sMenuOptions), this, SLOT(onOptions()));
+    menu->addSeparator();
+    menu->addAction(QIcon(":icons/check_update"), TRANSLATE("Check for Updates"), this, SLOT(onCheckUpdates()));
     menu->addAction(QIcon(":icons/about"), TRANSLATE(str::sMenuAbout), this, SLOT(onAbout()));
     menu->addSeparator();
     menu->addAction(QIcon(":icons/exit"), TRANSLATE(str::sMenuExit), qApp, SLOT(quit()));
@@ -395,6 +401,43 @@ void TrayIcon::onAbout()
 
     m_notifier.setMessages(QStringList() << QString(str::sReportTmplNoMail).arg(about));
     m_notifier.show();
+}
+
+void TrayIcon::onCheckUpdates()
+{
+    m_reportNewVersion = true;
+    m_versionManager.checkForUpdates();
+}
+
+void TrayIcon::onVersionChecked()
+{
+    if (!m_reportNewVersion) {
+        return;
+    }
+
+    QMessageBox msgBox;
+    msgBox.setWindowTitle(TRANSLATE(str::sNewVersionTitle));
+    QString message;
+    if (m_versionManager.updatesAvailable()) {
+        message = TRANSLATE(str::sNewVersion2).arg(m_versionManager.updatedVersion());        
+        msgBox.setInformativeText(str::sNewVersionQuestion);
+        msgBox.setStandardButtons(QMessageBox::Yes | QMessageBox::No | QMessageBox::Cancel);
+        msgBox.setDefaultButton(QMessageBox::Yes);
+    } else {
+        message = TRANSLATE(str::sNoNewVersion);
+    }
+    msgBox.setText(message);
+    int ret = msgBox.exec();
+    switch (ret)
+    {
+    case QMessageBox::Yes:
+        m_versionManager.download();
+        break;
+    case QMessageBox::No:
+    case QMessageBox::Cancel:
+    default:
+        break;
+    }
 }
 
 } // namespace gui

@@ -48,7 +48,6 @@ public:
     ~TrayIcon();
 
 private slots:
-
     /// When tray icon activated.
     void trayIconActivated(QSystemTrayIcon::ActivationReason reason);
 
@@ -78,6 +77,12 @@ private slots:
 
     /// Shows application's "About" message.
     void onAbout();
+
+    /// Checks for the new versions.
+    void onCheckUpdates();
+
+    /// Called when the application version is checked.
+    void onVersionChecked();
 
 private:
     /// Translates the application.
@@ -127,6 +132,8 @@ private:
 
     /// Store the unread email count on the last parsing.
     int m_lastMailCount;
+
+    bool m_reportNewVersion;
 };
 
 } // namespace gui
