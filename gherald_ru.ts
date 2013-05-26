@@ -12,7 +12,7 @@
         <location filename="strings/guiStrings.cpp" line="45"/>
         <source>Gmail Herald %1&lt;BR&gt;Copyright © 2010-2013 &lt;a href=&quot;mailto:vahancho@gmail.com&quot;&gt;Vahan Aghajanyan&lt;/a&gt;.&lt;BR&gt;All Rights Reserved.&lt;BR&gt;&lt;BR&gt;Gmail Herald is made possible by the &lt;a href=&quot;http://sourceforge.net/projects/gherald&quot;&gt;GHerald&lt;/a&gt; open source project.</source>
         <oldsource>Gmail Herald v %1&lt;BR&gt;Copyright © 2010-2013 &lt;a href=&quot;mailto:vahancho@gmail.com&quot;&gt;Vahan Aghajanyan&lt;/a&gt;.&lt;BR&gt;All Rights Reserved.&lt;BR&gt;&lt;BR&gt;Gmail Herald is made possible by the &lt;a href=&quot;http://sourceforge.net/projects/gherald&quot;&gt;GHerald&lt;/a&gt; open source project.</oldsource>
-        <translation>Gmail Herald %1&lt;BR&gt;Copyright © 2010-2013&lt;a href=&quot;mailto:vahancho@gmail.com&quot;&gt;Vahan Aghajanyan&lt;/a&gt;.&lt;BR&gt;Все права защищены.&lt;BR&gt;&lt;BR&gt;Gmail Herald создан благодаря проекту с открытым кодом &lt;a href=&quot;http://sourceforge.net/projects/gherald&quot;&gt;GHerald&lt;/a&gt;.</translation>
+        <translation>Gmail Herald %1&lt;BR&gt;Copyright © 2010-2013 &lt;a href=&quot;mailto:vahancho@gmail.com&quot;&gt;Vahan Aghajanyan&lt;/a&gt;.&lt;BR&gt;Все права защищены.&lt;BR&gt;&lt;BR&gt;Gmail Herald создан благодаря проекту с открытым кодом &lt;a href=&quot;http://sourceforge.net/projects/gherald&quot;&gt;GHerald&lt;/a&gt;.</translation>
     </message>
     <message>
         <location filename="strings/guiStrings.cpp" line="54"/>
@@ -43,192 +43,197 @@ You can download new version from the project&apos;s web site.</source>
         <translation>Это последняя версия Gmail Herald.</translation>
     </message>
     <message>
-        <location filename="strings/guiStrings.cpp" line="71"/>
+        <location filename="strings/guiStrings.cpp" line="65"/>
+        <source>Check for Updates</source>
+        <translation>Проверить Обновления</translation>
+    </message>
+    <message>
+        <location filename="strings/guiStrings.cpp" line="72"/>
         <source>View &amp;Inbox</source>
         <translation>&amp;Открыть ящик</translation>
     </message>
     <message>
-        <location filename="strings/guiStrings.cpp" line="72"/>
+        <location filename="strings/guiStrings.cpp" line="73"/>
         <source>&amp;Check Mail Now</source>
         <translation>&amp;Проверить почту</translation>
     </message>
     <message>
-        <location filename="strings/guiStrings.cpp" line="73"/>
+        <location filename="strings/guiStrings.cpp" line="74"/>
         <source>Tell me A&amp;gain...</source>
         <translation>&amp;Сообщить повторно...</translation>
     </message>
     <message>
-        <location filename="strings/guiStrings.cpp" line="74"/>
+        <location filename="strings/guiStrings.cpp" line="75"/>
         <source>Change &amp;User/Password...</source>
         <oldsource>Change &amp;User...</oldsource>
         <translation>Сменить &amp;логин/пароль...</translation>
     </message>
     <message>
-        <location filename="strings/guiStrings.cpp" line="75"/>
+        <location filename="strings/guiStrings.cpp" line="76"/>
         <source>&amp;Options...</source>
         <translation>&amp;Настройки...</translation>
     </message>
     <message>
-        <location filename="strings/guiStrings.cpp" line="76"/>
+        <location filename="strings/guiStrings.cpp" line="77"/>
         <source>&amp;About</source>
         <oldsource>&amp;About...</oldsource>
         <translation>О п&amp;рограмме</translation>
     </message>
     <message>
-        <location filename="strings/guiStrings.cpp" line="77"/>
+        <location filename="strings/guiStrings.cpp" line="78"/>
         <source>E&amp;xit</source>
         <translation>&amp;Выход</translation>
     </message>
     <message>
-        <location filename="strings/guiStrings.cpp" line="80"/>
+        <location filename="strings/guiStrings.cpp" line="81"/>
         <source>No unread mail</source>
         <translation>Нет непрочитанной почты</translation>
     </message>
     <message>
-        <location filename="strings/guiStrings.cpp" line="81"/>
+        <location filename="strings/guiStrings.cpp" line="82"/>
         <source>%1 unread conversation</source>
         <translation>%1 непрочитанных сообщений</translation>
     </message>
     <message>
-        <location filename="strings/guiStrings.cpp" line="82"/>
+        <location filename="strings/guiStrings.cpp" line="83"/>
         <source>&lt;p&gt;Your inbox contains no unread conversations.&lt;/p&gt;</source>
         <translation>&lt;p&gt;Ваш почтовый ящик не содержит непрочитанных сообщений.&lt;/p&gt;</translation>
     </message>
     <message>
-        <location filename="strings/guiStrings.cpp" line="101"/>
+        <location filename="strings/guiStrings.cpp" line="102"/>
         <source>&amp;Mail checking preferences</source>
         <translation>&amp;Настройки проверки почты</translation>
     </message>
     <message>
-        <location filename="strings/guiStrings.cpp" line="107"/>
+        <location filename="strings/guiStrings.cpp" line="108"/>
         <source>&amp;User interface language</source>
         <oldsource>User interface language</oldsource>
         <translation>&amp;Язык интерфейса</translation>
     </message>
     <message>
-        <location filename="strings/guiStrings.cpp" line="110"/>
+        <location filename="strings/guiStrings.cpp" line="111"/>
         <source>Hide window</source>
         <translation>Скрыть окно</translation>
     </message>
     <message>
-        <location filename="strings/guiStrings.cpp" line="92"/>
+        <location filename="strings/guiStrings.cpp" line="93"/>
         <source>User name:</source>
         <translation>Пользователь:</translation>
     </message>
     <message>
-        <location filename="strings/guiStrings.cpp" line="93"/>
+        <location filename="strings/guiStrings.cpp" line="94"/>
         <source>Password:</source>
         <translation>Пароль:</translation>
     </message>
     <message>
-        <location filename="strings/guiStrings.cpp" line="94"/>
+        <location filename="strings/guiStrings.cpp" line="95"/>
         <source>&amp;Remember my password</source>
         <translation>&amp;Запомнить пароль</translation>
     </message>
     <message>
-        <location filename="strings/guiStrings.cpp" line="111"/>
+        <location filename="strings/guiStrings.cpp" line="112"/>
         <source>Next message</source>
         <translation>Следующее сообщение</translation>
     </message>
     <message>
-        <location filename="strings/guiStrings.cpp" line="112"/>
+        <location filename="strings/guiStrings.cpp" line="113"/>
         <source>Previous message</source>
         <translation>Предыдущее сообщение</translation>
     </message>
     <message>
-        <location filename="strings/guiStrings.cpp" line="113"/>
+        <location filename="strings/guiStrings.cpp" line="114"/>
         <source>%1 of %2</source>
         <translation>%1 из %2</translation>
     </message>
     <message>
-        <location filename="strings/guiStrings.cpp" line="114"/>
+        <location filename="strings/guiStrings.cpp" line="115"/>
         <source>OK</source>
         <translation>ОК</translation>
     </message>
     <message>
-        <location filename="strings/guiStrings.cpp" line="115"/>
+        <location filename="strings/guiStrings.cpp" line="116"/>
         <source>Cancel</source>
         <translation>Отмена</translation>
     </message>
     <message>
-        <location filename="strings/guiStrings.cpp" line="95"/>
+        <location filename="strings/guiStrings.cpp" line="96"/>
         <source>Connect to mail.google.com</source>
         <translation>Соедениться с  mail.google.com</translation>
     </message>
     <message>
-        <location filename="strings/guiStrings.cpp" line="67"/>
+        <location filename="strings/guiStrings.cpp" line="68"/>
         <source>English</source>
         <translation>Английский</translation>
     </message>
     <message>
-        <location filename="strings/guiStrings.cpp" line="68"/>
+        <location filename="strings/guiStrings.cpp" line="69"/>
         <source>Russian</source>
         <translation>Русский</translation>
     </message>
     <message>
-        <location filename="strings/guiStrings.cpp" line="85"/>
+        <location filename="strings/guiStrings.cpp" line="86"/>
         <source>A host name lookup is in progress...</source>
         <translation>Поиск сервера...</translation>
     </message>
     <message>
-        <location filename="strings/guiStrings.cpp" line="86"/>
+        <location filename="strings/guiStrings.cpp" line="87"/>
         <source>Connecting to the host...</source>
         <translation>Соединение с сервером...</translation>
     </message>
     <message>
-        <location filename="strings/guiStrings.cpp" line="87"/>
+        <location filename="strings/guiStrings.cpp" line="88"/>
         <source>Sending request to the server...</source>
         <translation>Отправлен запрос серверу...</translation>
     </message>
     <message>
-        <location filename="strings/guiStrings.cpp" line="88"/>
+        <location filename="strings/guiStrings.cpp" line="89"/>
         <source>Reading the server&apos;s response...</source>
         <translation>Чтение ответа от сервера...</translation>
     </message>
     <message>
-        <location filename="strings/guiStrings.cpp" line="89"/>
+        <location filename="strings/guiStrings.cpp" line="90"/>
         <source>Connected</source>
         <oldsource>Connected.</oldsource>
         <translation>Соединен</translation>
     </message>
     <message>
-        <location filename="strings/guiStrings.cpp" line="98"/>
+        <location filename="strings/guiStrings.cpp" line="99"/>
         <source>Play sound on new mail</source>
         <oldsource>&amp;Play sound on new mail</oldsource>
         <translation>Воспроизвести звук при новом сообщении</translation>
     </message>
     <message>
-        <location filename="strings/guiStrings.cpp" line="99"/>
+        <location filename="strings/guiStrings.cpp" line="100"/>
         <source>&amp;Run on system start up</source>
         <translation>&amp;Запускать при старте системы</translation>
     </message>
     <message>
-        <location filename="strings/guiStrings.cpp" line="100"/>
+        <location filename="strings/guiStrings.cpp" line="101"/>
         <source>Check mail every:</source>
         <translation>Проверять почту каждые:</translation>
     </message>
     <message>
-        <location filename="strings/guiStrings.cpp" line="102"/>
+        <location filename="strings/guiStrings.cpp" line="103"/>
         <source>minutes</source>
         <translation>минуты</translation>
     </message>
     <message>
-        <location filename="strings/guiStrings.cpp" line="103"/>
+        <location filename="strings/guiStrings.cpp" line="104"/>
         <source>...</source>
         <translation>...</translation>
     </message>
     <message>
-        <location filename="strings/guiStrings.cpp" line="104"/>
+        <location filename="strings/guiStrings.cpp" line="105"/>
         <source>Gmail Herald Options</source>
         <translation>Настройки Gmail Herald</translation>
     </message>
     <message>
-        <location filename="strings/guiStrings.cpp" line="105"/>
+        <location filename="strings/guiStrings.cpp" line="106"/>
         <source>Browse for notification sound file</source>
         <translation>Поиск звукового файла</translation>
     </message>
     <message>
-        <location filename="strings/guiStrings.cpp" line="106"/>
+        <location filename="strings/guiStrings.cpp" line="107"/>
         <source>Sound (*.wav)</source>
         <translation>Файл звука (*.wav)</translation>
     </message>

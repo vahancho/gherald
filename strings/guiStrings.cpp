@@ -62,6 +62,7 @@ namespace str
     const char *sNewVersionTitle = QT_TRANSLATE_NOOP("GHerald", "Gmail Herald Update");
     const char *sNewVersionQuestion = QT_TRANSLATE_NOOP("GHerald", "Do you want to download it now?");
     const char *sNoNewVersion = QT_TRANSLATE_NOOP("GHerald", "Gmail Herald is up to date.");
+    const char *sCheckUpdates = QT_TRANSLATE_NOOP("GHerald", "Check for Updates");
 
     // Internationalization strings
     const char *sLanguageEnglishTitle = QT_TRANSLATE_NOOP("GHerald", "English");

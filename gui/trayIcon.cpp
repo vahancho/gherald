@@ -118,7 +118,7 @@ void TrayIcon::createMenu()
     menu->addAction(QIcon(":icons/user"), TRANSLATE(str::sMenuChangeUser), this, SLOT(onChangeUser()));
     menu->addAction(QIcon(":icons/options"), TRANSLATE(str::sMenuOptions), this, SLOT(onOptions()));
     menu->addSeparator();
-    menu->addAction(QIcon(":icons/check_update"), TRANSLATE("Check for Updates"), this, SLOT(onCheckUpdates()));
+    menu->addAction(QIcon(":icons/check_update"), TRANSLATE(str::sCheckUpdates), this, SLOT(onCheckUpdates()));
     menu->addAction(QIcon(":icons/about"), TRANSLATE(str::sMenuAbout), this, SLOT(onAbout()));
     menu->addSeparator();
     menu->addAction(QIcon(":icons/exit"), TRANSLATE(str::sMenuExit), qApp, SLOT(quit()));
@@ -420,7 +420,7 @@ void TrayIcon::onVersionChecked()
     QString message;
     if (m_versionManager.updatesAvailable()) {
         message = TRANSLATE(str::sNewVersion2).arg(m_versionManager.updatedVersion());        
-        msgBox.setInformativeText(str::sNewVersionQuestion);
+        msgBox.setInformativeText(TRANSLATE(str::sNewVersionQuestion));
         msgBox.setStandardButtons(QMessageBox::Yes | QMessageBox::No | QMessageBox::Cancel);
         msgBox.setDefaultButton(QMessageBox::Yes);
     } else {

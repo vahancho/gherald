@@ -39,6 +39,7 @@ namespace str
     extern const char *sNewVersionTitle;
     extern const char *sNewVersionQuestion;
     extern const char *sNoNewVersion;
+    extern const char *sCheckUpdates;
 
     // Internationalization strings
     extern const char *sLanguageEnglishTitle;
