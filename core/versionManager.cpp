@@ -21,7 +21,7 @@
 #include <QString>
 #include <QDesktopServices>
 #include "versionManager.h"
-#include "../strings/strings.h"
+#include <strings/strings.h>
 
 namespace core
 {
