@@ -38,6 +38,9 @@ public:
 
     void setMessages(const QStringList &messages);
 
+signals:
+    void moved();
+
 protected:
     /// Handle the show event.
     void showEvent(QShowEvent *event);

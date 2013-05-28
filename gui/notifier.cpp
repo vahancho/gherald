@@ -164,8 +164,10 @@ void Notifier::mousePressEvent(QMouseEvent* event)
 
 void Notifier::mouseMoveEvent(QMouseEvent* event)
 {
-    if (!m_offset.isNull())
+    if (!m_offset.isNull()) {
         move(event->globalPos() - m_offset);
+        emit moved();
+    }
 
     QTextBrowser::mouseMoveEvent(event);
 }
