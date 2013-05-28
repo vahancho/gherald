@@ -128,7 +128,6 @@ void TrayIcon::createMenu()
 void TrayIcon::saveState()
 {
     m_defaultManager.setDefault(str::sDefNotifyPos, m_notifier.geometry().topLeft());
-    m_defaultManager.setDefault(str::sDefLogin, m_login.encode());
 }
 
 void TrayIcon::restoreState()
@@ -258,9 +257,9 @@ void TrayIcon::onParsingDone(bool error)
                 m_parser->setPassword(dlg.password());
 
                 if (dlg.saveLogin()) {
-                    // Store the user data for future saving.
                     m_login.setUser(dlg.user());
                     m_login.setPassword(dlg.password());
+                    m_defaultManager.setDefault(str::sDefLogin, m_login.encode());
                 }
 
                 // Restart parsing with new user data.
@@ -284,15 +283,14 @@ void TrayIcon::onChangeUser()
     dlg.setUser(m_parser->user());
     dlg.setPassword(m_parser->password());
 
-    if (dlg.exec() == QDialog::Accepted)
-    {
+    if (dlg.exec() == QDialog::Accepted) {
         m_parser->setUser(dlg.user());
         m_parser->setPassword(dlg.password());
 
-        if (dlg.saveLogin())
-        {
+        if (dlg.saveLogin()) {
             m_login.setUser(dlg.user());
             m_login.setPassword(dlg.password());
+            m_defaultManager.setDefault(str::sDefLogin, m_login.encode());
         }
 
         m_parser->parse();
