@@ -84,6 +84,8 @@ private slots:
     /// Called when the application version is checked.
     void onVersionChecked();
 
+    void onNotifierMoved();
+
 private:
     /// Translates the application.
     void translate(const QString &language);
@@ -93,9 +95,6 @@ private:
 
     /// Creates context menu.
     void createMenu();
-
-    /// Saves the application state.
-    void saveState();
 
     /// Restores saved application state in the current session.
     void restoreState();

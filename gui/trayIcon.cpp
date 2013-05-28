@@ -54,6 +54,8 @@ TrayIcon::TrayIcon()
     connect(this, SIGNAL(activated(QSystemTrayIcon::ActivationReason)),
             this, SLOT(trayIconActivated(QSystemTrayIcon::ActivationReason)));
 
+    connect(&m_notifier, SIGNAL(moved()), SLOT(onNotifierMoved()));
+
     m_parser = new core::AtomParser;
 
     // Menu
@@ -88,10 +90,7 @@ TrayIcon::TrayIcon()
 
 TrayIcon::~TrayIcon()
 {
-    saveState();
-
-    if (m_translator)
-    {
+    if (m_translator) {
         qApp->removeTranslator(m_translator);
         delete m_translator;
     }
@@ -123,11 +122,6 @@ void TrayIcon::createMenu()
     menu->addAction(QIcon(":icons/about"), TRANSLATE(str::sMenuAbout), this, SLOT(onAbout()));
     menu->addSeparator();
     menu->addAction(QIcon(":icons/exit"), TRANSLATE(str::sMenuExit), qApp, SLOT(quit()));
-}
-
-void TrayIcon::saveState()
-{
-    m_defaultManager.setDefault(str::sDefNotifyPos, m_notifier.geometry().topLeft());
 }
 
 void TrayIcon::restoreState()
@@ -453,6 +447,11 @@ void TrayIcon::onVersionChecked()
     default:
         break;
     }
+}
+
+void TrayIcon::onNotifierMoved()
+{
+    m_defaultManager.setDefault(str::sDefNotifyPos, m_notifier.geometry().topLeft());
 }
 
 } // namespace gui
