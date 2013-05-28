@@ -29,6 +29,7 @@
 #include <QSound>
 #include <QDir>
 #include <QMessageBox>
+#include <QPainter>
 
 #include "trayIcon.h"
 #include "dlgLogin.h"
@@ -212,7 +213,14 @@ void TrayIcon::onParsingDone(bool error)
             setToolTip(TRANSLATE(str::sUnreadConversations).arg(count));
         } else {
             setIcon(m_noUnreadIcon);
-            setToolTip(TRANSLATE(str::sNoUnreadMail));
+            if (m_versionManager.updatesAvailable()) {
+                QString msg = QString("%1\n%2").arg(TRANSLATE(str::sNoUnreadMail))
+                                               .arg(TRANSLATE(str::sNewVersion2)
+                                                    .arg(m_versionManager.updatedVersion()));
+                setToolTip(msg);
+            } else {
+                setToolTip(TRANSLATE(str::sNoUnreadMail));
+            }
             m_notifier.setMessages(QStringList() << QString(str::sReportTmplNoMail).arg(TRANSLATE(str::sUnreadLong)));
             m_iconTimer.stop();
         }
@@ -412,6 +420,15 @@ void TrayIcon::onCheckUpdates()
 void TrayIcon::onVersionChecked()
 {
     if (!m_reportNewVersion) {
+        QPixmap pix(":/icons/app");
+        QPixmap newPix(m_noUnreadIcon.pixmap(QSize(32, 32)));
+        QPainter p(&newPix);
+        p.setBackgroundMode(Qt::TransparentMode);
+        p.translate(8, 8);
+        p.scale(2, 2);
+        p.drawPixmap(0, 0, QPixmap(":/icons/warning_sm"));
+        p.end();
+        m_noUnreadIcon = QIcon(newPix);
         return;
     }
 
@@ -419,7 +436,7 @@ void TrayIcon::onVersionChecked()
     msgBox.setWindowTitle(TRANSLATE(str::sNewVersionTitle));
     QString message;
     if (m_versionManager.updatesAvailable()) {
-        message = TRANSLATE(str::sNewVersion2).arg(m_versionManager.updatedVersion());        
+        message = TRANSLATE(str::sNewVersion2).arg(m_versionManager.updatedVersion());
         msgBox.setInformativeText(TRANSLATE(str::sNewVersionQuestion));
         msgBox.setStandardButtons(QMessageBox::Yes | QMessageBox::No | QMessageBox::Cancel);
         msgBox.setDefaultButton(QMessageBox::Yes);
