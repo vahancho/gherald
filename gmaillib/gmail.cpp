@@ -67,39 +67,74 @@ void Gmail::login(const QString &user, const QString &pass)
     }
 }
 
-int Gmail::unreadCount()
+void Gmail::sendUnreadCount()
 {
-    sendCommand("EXAMINE INBOX"); // Read-only asccess.
-    sendCommand("SEARCH UNSEEN");
-    return 0;
+    sendCommand("EXAMINE INBOX", false); // Read-only asccess.
+    m_unreadPrefix = sendCommand("status INBOX (unseen)");
+}
+
+int Gmail::unreadCount() const
+{
+    if (m_commands.contains(m_unreadPrefix)) {
+        QString responseStr = m_commands.value(m_unreadPrefix);
+        Response response(responseStr);
+        if (response.status() == Response::Ok) {
+            QStringList info = response.info();
+            Q_ASSERT(info.size() == 1);
+            QString s = info.first();
+            QRegExp rx("\\d+");
+            int pos = rx.indexIn(s);
+            if (pos > -1) {
+                QString value = rx.cap(0);
+                return value.toInt();
+            }
+        } else {
+            emit error(response.statusMessage());
+        }
+    }
+    return -1;
 }
 
 void Gmail::markAsRead(int id)
 {
-    sendCommand("SELECT INBOX"); // Read-write access.
+    sendCommand("SELECT INBOX", false); // Read-write access.
 
-    QString setFlag = QString("SELECT %1 +FLAGS (\\SEEN)").arg(id);
+    QString setFlag = QString("STORE %1 +FLAGS (\\SEEN)").arg(id);
     sendCommand(setFlag);
 }
 
-QList<int> Gmail::unreadMessages()
+void Gmail::sendUnreadMessages()
 {
-    sendCommand("EXAMINE INBOX");
-    sendCommand("SEARCH UNSEEN");
+    sendCommand("EXAMINE INBOX", false);
+    m_unreadMsgPrefix = sendCommand("SEARCH UNSEEN");
+}
+
+QList<int> Gmail::unreadMessages() const
+{
+    if (m_commands.contains(m_unreadMsgPrefix)) {
+        QString responseStr = m_commands.value(m_unreadMsgPrefix);
+        Response response(responseStr);
+        if (response.status() == Response::Ok) {
+            QStringList info = response.info();
+            Q_ASSERT(info.size() == 1);
+            QString s = info.first();
+            QList<int> ids;
+            QRegExp rx("(\\d+)");
+            int pos = 0;
+            while ((pos = rx.indexIn(s, pos)) != -1) {
+                ids.append(rx.cap(1).toInt());
+                pos += rx.matchedLength();
+            }
+            return ids;
+        } else {
+            emit error(response.statusMessage());
+        }
+    }
     return QList<int>();
 }
 
-void Gmail::updateEnabledState()
+void Gmail::socketStateChanged(QAbstractSocket::SocketState /*state*/)
 {
-    bool unconnected = m_socket.state() == QAbstractSocket::UnconnectedState;
-    bool connected = m_socket.state() == QAbstractSocket::ConnectedState;
-}
-
-void Gmail::socketStateChanged(QAbstractSocket::SocketState state)
-{
-    if (state == QAbstractSocket::UnconnectedState)
-    {
-    }
 }
 
 void Gmail::onProxyAuthenticationRequired(const QNetworkProxy & /*proxy*/,
@@ -109,7 +144,8 @@ void Gmail::onProxyAuthenticationRequired(const QNetworkProxy & /*proxy*/,
 
 void Gmail::socketReadyRead()
 {
-    if (m_socket.state() == QAbstractSocket::UnconnectedState) {
+    if (m_socket.state() == QAbstractSocket::UnconnectedState ||
+        m_commandQueue.isEmpty()) {
         return;
     }
     qDebug() << "Received";
@@ -136,8 +172,10 @@ void Gmail::socketReadyRead()
             if (m_eventLoop.isRunning()) {
                 m_eventLoop.quit();
             }
+            if (cmd->m_notify) {
+                emit done();
+            }
             delete cmd;
-            emit done();
             return;
         }
     }
@@ -147,7 +185,7 @@ void Gmail::socketReadyRead()
     cmd->m_buffer->setData(QByteArray(cmd->m_buffer->data()).remove(0, pos));
 }
 
-QString Gmail::sendCommand(const QString &command)
+QString Gmail::sendCommand(const QString &command, bool notify)
 {
     // Always connect to the server if not connected yet.
     if (m_socket.state() != QAbstractSocket::ConnectedState && !connect()) {
@@ -158,6 +196,7 @@ QString Gmail::sendCommand(const QString &command)
     static int index = 1;
     Command *cmd = new Command;
     cmd->m_prefix = QString("cmd%1").arg(index++);
+    cmd->m_notify = notify;
     m_commandQueue.enqueue(cmd);
     m_commands[cmd->m_prefix] = QString();
 

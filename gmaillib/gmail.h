@@ -37,23 +37,27 @@ public:
     ~Gmail();
 
     void login(const QString &user, const QString &pass);
-    int unreadCount();
-    QList<int> unreadMessages();
+
+    void sendUnreadCount();
+    int unreadCount() const;
+
+    void sendUnreadMessages();
+    QList<int> unreadMessages() const;
+
     void markAsRead(int id);
 
 signals:
     void done();
-    void error(const QString &);
+    void error(const QString &) const;
 
 private slots:
-    void updateEnabledState();
     void socketStateChanged(QAbstractSocket::SocketState state);
     void socketReadyRead();
     void onProxyAuthenticationRequired(const QNetworkProxy &proxy, QAuthenticator *auth);
 
 private:
     bool connect();
-    QString sendCommand(const QString &command);
+    QString sendCommand(const QString &command, bool notify = true);
     QString prefix(const QString &line) const;
 
     QSslSocket m_socket;
@@ -75,8 +79,12 @@ private:
 
         QString m_prefix;
         QBuffer *m_buffer;
+        bool m_notify;
     };
     QQueue<Command *> m_commandQueue;
+
+    QString m_unreadPrefix;
+    QString m_unreadMsgPrefix;
 };
 
 #endif // __GMAIL_H__
