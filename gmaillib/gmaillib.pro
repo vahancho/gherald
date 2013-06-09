@@ -21,6 +21,6 @@ INCLUDEPATH += .
 DEPENDPATH += .
 OBJECTS_DIR += obj
 
-HEADERS = export.h gmail.h
-SOURCES = gmail.cpp
+HEADERS = export.h gmail.h response.h
+SOURCES = gmail.cpp response.cpp
 
