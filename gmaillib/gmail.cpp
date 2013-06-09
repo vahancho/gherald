@@ -139,11 +139,12 @@ void Gmail::socketReadyRead()
     cmd->m_buffer->setData(QByteArray(cmd->m_buffer->data()).remove(0, pos));
 }
 
-void Gmail::sendCommand(const QString &command)
+QString Gmail::sendCommand(const QString &command)
 {
     // Always connect to the server if not connected yet.
     if (m_socket.state() != QAbstractSocket::ConnectedState && !connect()) {
-        return;
+        emit error("Not connected.");
+        return QString();
     }
 
     static int index = 1;
@@ -156,7 +157,9 @@ void Gmail::sendCommand(const QString &command)
     m_socket.write(commandStr.toUtf8());
     if (!m_socket.waitForBytesWritten()) {
         emit error("Failed to write into the socket.");
+        return QString();
     }
+    return cmd->m_prefix;
 }
 
 QString Gmail::prefix(const QString &line) const

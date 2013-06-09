@@ -53,7 +53,7 @@ private slots:
 
 private:
     bool connect();
-    void sendCommand(const QString &command);
+    QString sendCommand(const QString &command);
     QString prefix(const QString &line) const;
 
     QSslSocket m_socket;
