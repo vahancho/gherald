@@ -66,6 +66,14 @@ int Gmail::unreadCount()
     return 0;
 }
 
+void Gmail::markUnread(int id)
+{
+    sendCommand("SELECT INBOX"); // Read-write access.
+
+    QString setFlag = QString("SELECT %1 +FLAGS (\SEEN)").arg(id);
+    sendCommand(setFlag);
+}
+
 QList<int> Gmail::unreadMessages()
 {
     sendCommand("EXAMINE INBOX");
