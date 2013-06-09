@@ -38,6 +38,7 @@ public:
 
     void login(const QString &user, const QString &pass);
     int unreadCount();
+    QList<int> unreadMessages();
 
 public slots:
     /// Start parsing for the new mail.

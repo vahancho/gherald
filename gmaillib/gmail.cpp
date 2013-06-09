@@ -66,6 +66,13 @@ int Gmail::unreadCount()
     return 0;
 }
 
+QList<int> Gmail::unreadMessages()
+{
+    sendCommand("EXAMINE INBOX");
+    sendCommand("SEARCH UNSEEN");
+    return QList<int>();
+}
+
 void Gmail::updateEnabledState()
 {
     bool unconnected = m_socket.state() == QAbstractSocket::UnconnectedState;
