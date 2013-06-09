@@ -38,6 +38,11 @@ QString Response::statusMessage() const
     return m_statusMessage;
 }
 
+QStringList Response::info() const
+{
+    return m_info;
+}
+
 void Response::parse(const QString &input)
 {
     QStringList lines = input.trimmed().split("\r\n");
