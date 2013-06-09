@@ -53,10 +53,18 @@ bool Gmail::connect()
 void Gmail::login(const QString &user, const QString &pass)
 {
     QString loginStr = QString("LOGIN %1 %2").arg(user).arg(pass);
-    sendCommand(loginStr);
+    QString prefix = sendCommand(loginStr);
 
     // Need to wait, until we are logged in.
     m_eventLoop.exec();
+
+    if (m_commands.contains(prefix)) {
+        QString responseStr = m_commands.value(prefix);
+        Response response(responseStr);
+        if (response.status() != Response::Ok) {
+            emit error(response.statusMessage());
+        }
+    }
 }
 
 int Gmail::unreadCount()
@@ -143,7 +151,7 @@ QString Gmail::sendCommand(const QString &command)
 {
     // Always connect to the server if not connected yet.
     if (m_socket.state() != QAbstractSocket::ConnectedState && !connect()) {
-        emit error("Not connected.");
+        emit error("Cannot connect to the server.");
         return QString();
     }
 
