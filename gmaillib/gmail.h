@@ -41,6 +41,10 @@ public:
     QList<int> unreadMessages();
     void markAsRead(int id);
 
+signals:
+    void done();
+    void error(const QString &);
+
 private slots:
     void updateEnabledState();
     void socketStateChanged(QAbstractSocket::SocketState state);
@@ -48,7 +52,7 @@ private slots:
     void onProxyAuthenticationRequired(const QNetworkProxy &proxy, QAuthenticator *auth);
 
 private:
-    void connect();
+    bool connect();
     void sendCommand(const QString &command);
     QString prefix(const QString &line) const;
 

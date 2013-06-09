@@ -40,13 +40,14 @@ Gmail::~Gmail()
     m_socket.abort();
 }
 
-void Gmail::connect()
+bool Gmail::connect()
 {
     m_socket.connectToHostEncrypted("imap.gmail.com", 993);
     if (!m_socket.waitForEncrypted()) {
-        qDebug() << m_socket.errorString();
-        m_socket.abort();
+        emit error(m_socket.errorString());
+        return false;
     }
+    return true;
 }
 
 void Gmail::login(const QString &user, const QString &pass)
@@ -128,6 +129,7 @@ void Gmail::socketReadyRead()
                 m_eventLoop.quit();
             }
             delete cmd;
+            emit done();
             return;
         }
     }
@@ -140,8 +142,8 @@ void Gmail::socketReadyRead()
 void Gmail::sendCommand(const QString &command)
 {
     // Always connect to the server if not connected yet.
-    if (m_socket.state() != QAbstractSocket::ConnectedState) {
-        connect();
+    if (m_socket.state() != QAbstractSocket::ConnectedState && !connect()) {
+        return;
     }
 
     static int index = 1;
@@ -153,7 +155,7 @@ void Gmail::sendCommand(const QString &command)
     QString commandStr = QString("%1 %2\r\n").arg(cmd->m_prefix).arg(command);
     m_socket.write(commandStr.toUtf8());
     if (!m_socket.waitForBytesWritten()) {
-        qDebug() << "failed to write bytes:" << commandStr;
+        emit error("Failed to write into the socket.");
     }
 }
 
