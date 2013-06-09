@@ -87,23 +87,6 @@ void Gmail::updateEnabledState()
     bool connected = m_socket.state() == QAbstractSocket::ConnectedState;
 }
 
-void Gmail::parse()
-{
-    bool connected = m_socket.state() == QAbstractSocket::ConnectedState;
-
-    if (connected) {
-        // Get INBOX info by message flags
-        // Unread count in inbox.
-        sendCommand("STATUS INBOX (MESSAGES UNSEEN RECENT)");
-        //sendData(". SELECT INBOX"); // read-write
-        sendCommand("EXAMINE INBOX"); // read-only
-        // Get the indexes of unseen messages
-        sendCommand("SEARCH UNSEEN");
-        // Fetch only the body of 88th message
-        // . FETCH 88 BODY.PEEK[1]
-    }
-}
-
 void Gmail::socketStateChanged(QAbstractSocket::SocketState state)
 {
     if (state == QAbstractSocket::UnconnectedState)

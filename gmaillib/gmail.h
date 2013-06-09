@@ -41,10 +41,6 @@ public:
     QList<int> unreadMessages();
     void markUnread(int id);
 
-public slots:
-    /// Start parsing for the new mail.
-    virtual void parse();
-
 private slots:
     void updateEnabledState();
     void socketStateChanged(QAbstractSocket::SocketState state);
