@@ -39,15 +39,13 @@ public:
     void login(const QString &user, const QString &pass);
     int unreadCount();
     QList<int> unreadMessages();
-    void markUnread(int id);
+    void markAsRead(int id);
 
 private slots:
     void updateEnabledState();
     void socketStateChanged(QAbstractSocket::SocketState state);
     void socketReadyRead();
     void onProxyAuthenticationRequired(const QNetworkProxy &proxy, QAuthenticator *auth);
-
-    void sslErrors(const QList<QSslError> &errors);
 
 private:
     void connect();

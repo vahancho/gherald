@@ -21,6 +21,7 @@
 #include <QtNetwork/QSslCipher>
 #include <QStringList>
 #include "gmail.h"
+#include "response.h"
 
 Gmail::Gmail(QObject *parent)
     :
@@ -28,8 +29,6 @@ Gmail::Gmail(QObject *parent)
 {
     QObject::connect(&m_socket, SIGNAL(stateChanged(QAbstractSocket::SocketState)),
             this, SLOT(socketStateChanged(QAbstractSocket::SocketState)));
-    QObject::connect(&m_socket, SIGNAL(sslErrors(QList<QSslError>)),
-            this, SLOT(sslErrors(QList<QSslError>)));
     QObject::connect(&m_socket, SIGNAL(readyRead()),
             this, SLOT(socketReadyRead()));
     QObject::connect(&m_socket, SIGNAL(proxyAuthenticationRequired(const QNetworkProxy &, QAuthenticator *)),
@@ -61,16 +60,16 @@ void Gmail::login(const QString &user, const QString &pass)
 
 int Gmail::unreadCount()
 {
-    sendCommand("EXAMINE INBOX");
+    sendCommand("EXAMINE INBOX"); // Read-only asccess.
     sendCommand("SEARCH UNSEEN");
     return 0;
 }
 
-void Gmail::markUnread(int id)
+void Gmail::markAsRead(int id)
 {
     sendCommand("SELECT INBOX"); // Read-write access.
 
-    QString setFlag = QString("SELECT %1 +FLAGS (\SEEN)").arg(id);
+    QString setFlag = QString("SELECT %1 +FLAGS (\\SEEN)").arg(id);
     sendCommand(setFlag);
 }
 
@@ -91,18 +90,19 @@ void Gmail::socketStateChanged(QAbstractSocket::SocketState state)
 {
     if (state == QAbstractSocket::UnconnectedState)
     {
-        //m_socket->deleteLater();
-        //m_socket = 0;
     }
 }
 
-void Gmail::onProxyAuthenticationRequired(const QNetworkProxy &proxy, QAuthenticator *auth)
+void Gmail::onProxyAuthenticationRequired(const QNetworkProxy & /*proxy*/,
+                                          QAuthenticator * /*auth*/)
 {
 }
 
 void Gmail::socketReadyRead()
 {
-    //QString received = QString::fromUtf8(m_socket.readAll());
+    if (m_socket.state() == QAbstractSocket::UnconnectedState) {
+        return;
+    }
     qDebug() << "Received";
 
     Command *cmd = m_commandQueue.head();
@@ -155,18 +155,6 @@ void Gmail::sendCommand(const QString &command)
     if (!m_socket.waitForBytesWritten()) {
         qDebug() << "failed to write bytes:" << commandStr;
     }
-}
-
-void Gmail::sslErrors(const QList<QSslError> &errors)
-{
-    foreach (const QSslError &error, errors)
-        qDebug(error.errorString().toAscii().data());
-
-    m_socket.ignoreSslErrors();
-
-    // did the socket state change?
-    if (m_socket.state() != QAbstractSocket::ConnectedState)
-        socketStateChanged(m_socket.state());
 }
 
 QString Gmail::prefix(const QString &line) const
