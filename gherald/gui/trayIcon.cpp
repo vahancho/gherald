@@ -55,6 +55,7 @@ TrayIcon::TrayIcon()
             this, SLOT(trayIconActivated(QSystemTrayIcon::ActivationReason)));
 
     connect(&m_notifier, SIGNAL(moved()), SLOT(onNotifierMoved()));
+    connect(&m_notifier, SIGNAL(markAsRead(int)), SLOT(onMarkedAsRead(int)));
 
     m_parser = new core::AtomParser;
 
@@ -82,9 +83,13 @@ TrayIcon::TrayIcon()
     m_iconTimer.setInterval(iconInterval);
     connect(&m_iconTimer, SIGNAL(timeout()), this, SLOT(onIconTimer()));
 
-    m_parser->parse();
-
     connect(&m_versionManager, SIGNAL(checked()), SLOT(onVersionChecked()));
+
+    connect(&m_gmailClient, SIGNAL(done()), SLOT(onGmailDone()));
+    connect(&m_gmailClient, SIGNAL(error(const QString &)),
+            SLOT(onGmailError(const QString &)));
+
+    onParseTimer();
     m_versionManager.checkForUpdates();
 }
 
@@ -113,7 +118,7 @@ void TrayIcon::createMenu()
     actionFont.setBold(true);
     act->setFont(actionFont);
 
-    menu->addAction(QIcon(":icons/check"), TRANSLATE(str::sMenuCheckMail), m_parser, SLOT(parse()));
+    menu->addAction(QIcon(":icons/check"), TRANSLATE(str::sMenuCheckMail), this, SLOT(onParseTimer()));
     menu->addAction(QIcon(":icons/refresh"), TRANSLATE(str::sMenuTellAgain), &m_notifier, SLOT(show()));
     menu->addAction(QIcon(":icons/user"), TRANSLATE(str::sMenuChangeUser), this, SLOT(onChangeUser()));
     menu->addAction(QIcon(":icons/options"), TRANSLATE(str::sMenuOptions), this, SLOT(onOptions()));
@@ -181,6 +186,10 @@ QString TrayIcon::translationFile(const QString &language) const
 void TrayIcon::onParseTimer()
 {
     m_parser->parse();
+    if (!m_gmailClient.loggedIn()) {
+        m_gmailClient.login(m_login.user(), m_login.password());
+    }
+    m_gmailClient.sendUnreadMessages();
 }
 
 void TrayIcon::onIconTimer()
@@ -209,7 +218,7 @@ void TrayIcon::onParsingDone(bool error)
             if (m_versionManager.updatesAvailable()) {
                 QString msg = QString("%1\n%2").arg(TRANSLATE(str::sNoUnreadMail))
                                                .arg(TRANSLATE(str::sNewVersion2)
-                                                    .arg(m_versionManager.updatedVersion()));
+                                               .arg(m_versionManager.updatedVersion()));
                 setToolTip(msg);
             } else {
                 setToolTip(TRANSLATE(str::sNoUnreadMail));
@@ -399,7 +408,8 @@ void TrayIcon::onAbout()
     if (m_versionManager.updatesAvailable())
         about += TRANSLATE(str::sNewVersion).arg(m_versionManager.updatedVersion());
 
-    m_notifier.setMessages(QStringList() << QString(str::sReportTmplNoMail).arg(about));
+    m_notifier.setMessages(QStringList() << QString(str::sReportTmplNoMail).arg(about),
+                           false);
     m_notifier.show();
 }
 
@@ -452,6 +462,27 @@ void TrayIcon::onVersionChecked()
 void TrayIcon::onNotifierMoved()
 {
     m_defaultManager.setDefault(str::sDefNotifyPos, m_notifier.geometry().topLeft());
+}
+
+void TrayIcon::onGmailDone()
+{
+    if (m_gmailClient.loggedIn()) {
+        m_unreadId = m_gmailClient.unreadMessages();
+        qDebug() << "Unread email count:" << m_unreadId.size();
+    }
+}
+
+void TrayIcon::onGmailError(const QString &errorMsg)
+{
+    m_unreadId.clear();
+}
+
+void TrayIcon::onMarkedAsRead(int id)
+{
+    if (m_gmailClient.loggedIn() && id >= 0 && id < m_unreadId.size()) {
+        int unread = m_unreadId.at(id);
+        m_gmailClient.markAsRead(unread);
+    }
 }
 
 } // namespace gui

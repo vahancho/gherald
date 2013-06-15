@@ -27,6 +27,7 @@
 #include <core/defaultManager.h>
 #include <core/versionManager.h>
 #include <core/login.h>
+#include <gmaillib/gmail.h>
 
 class QTranslator;
 
@@ -86,6 +87,11 @@ private slots:
 
     void onNotifierMoved();
 
+    void onMarkedAsRead(int);
+
+    void onGmailDone();
+    void onGmailError(const QString &);
+
 private:
     /// Translates the application.
     void translate(const QString &language);
@@ -110,6 +116,10 @@ private:
 
     /// The HTTP parser.
     core::Parser *m_parser;
+
+    Gmail m_gmailClient;
+
+    QList<int> m_unreadId;
 
     /// The default manager.
     core::DefaultManager m_defaultManager;
