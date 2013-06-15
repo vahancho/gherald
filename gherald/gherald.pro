@@ -18,6 +18,7 @@ CONFIG(release, debug|release) {
 win32:CONFIG += embed_manifest_exe
 INCLUDEPATH = ../..
 INCLUDEPATH += .
+INCLUDEPATH += ../
 
 # Define the application version and version string.
 DEFINES += GHERALD_VERSION=0x0003020b
