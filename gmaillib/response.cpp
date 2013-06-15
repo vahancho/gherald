@@ -46,7 +46,7 @@ QStringList Response::info() const
 void Response::parse(const QString &input)
 {
     QStringList lines = input.trimmed().split("\r\n");
-    Q_ASSERT(lines.size() > 1);
+    Q_ASSERT(lines.size() >= 1);
 
     QString lastLine = lines.last();
     QStringList tokens = lastLine.split(' ');
