@@ -73,6 +73,11 @@ Notifier::Notifier(QWidget * parent)
     m_prevButton->setIcon(QIcon(":icons/left"));
     m_prevButton->setToolTip(TRANSLATE(str::sPrevToolTip));
     connect(m_prevButton, SIGNAL(clicked()), SLOT(showPrevious()));
+
+    m_markReadButton = new NavigationButton(this);
+    m_markReadButton->setIcon(QIcon(":icons/warning"));
+    m_markReadButton->setToolTip(TRANSLATE("Mark Message As Read"));
+    connect(m_markReadButton, SIGNAL(clicked()), SLOT(markAsRead()));
 }
 
 Notifier::~Notifier()
@@ -141,6 +146,11 @@ void Notifier::showPrevious()
     showNext();
 }
 
+void Notifier::markAsRead()
+{
+    emit markAsRead(m_current - 1);
+}
+
 void Notifier::enterEvent(QEvent *event)
 {
     m_timer.stop();
@@ -195,6 +205,10 @@ void Notifier::resizeEvent(QResizeEvent *event)
     sz = m_prevButton->sizeHint();
     m_prevButton->move(p.x() - sz.width(), frameWidth);
 
+    // Move "Mark as Read" button to the bottom of the window.
+    m_markReadButton->move(rect().right() - frameWidth - 2 * m_markReadButton->width(),
+                           rect().bottom() - frameWidth - m_markReadButton->height());
+
     QTextBrowser::resizeEvent(event);
 }
 
@@ -241,6 +255,7 @@ void Notifier::changeEvent(QEvent *event)
         m_hideButton->setToolTip(TRANSLATE(str::sHideBtnToolTip));
         m_nextButton->setToolTip(TRANSLATE(str::sNextToolTip));
         m_prevButton->setToolTip(TRANSLATE(str::sPrevToolTip));
+        m_markReadButton->setToolTip(TRANSLATE("Mark Message As Read"));
     } else {
         QTextBrowser::changeEvent(event);
     }

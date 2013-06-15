@@ -40,6 +40,7 @@ public:
 
 signals:
     void moved();
+    void markAsRead(int);
 
 protected:
     /// Handle the show event.
@@ -65,6 +66,7 @@ private slots:
 
     void showNext();
     void showPrevious();
+    void markAsRead();
 
 protected:
     void changeEvent(QEvent *event);
@@ -98,6 +100,7 @@ private:
     NavigationButton *m_hideButton;
     NavigationButton *m_nextButton;
     NavigationButton *m_prevButton;
+    NavigationButton *m_markReadButton;
 
     /// Timer event handler to change the window transparency.
     QTimer m_timer;
