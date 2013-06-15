@@ -75,7 +75,7 @@ Notifier::Notifier(QWidget * parent)
     connect(m_prevButton, SIGNAL(clicked()), SLOT(showPrevious()));
 
     m_markReadButton = new NavigationButton(this);
-    m_markReadButton->setIcon(QIcon(":icons/warning"));
+    m_markReadButton->setIcon(QIcon(":icons/mark_read"));
     m_markReadButton->setToolTip(TRANSLATE("Mark Message As Read"));
     connect(m_markReadButton, SIGNAL(clicked()), SLOT(markAsRead()));
 }
@@ -280,6 +280,7 @@ Notifier::NavigationButton::NavigationButton(QWidget *parent)
 
     // Customize the button style
     setStyleSheet(sStyleNormal);
+    resize(16, 16);
 }
 
 bool Notifier::NavigationButton::event(QEvent *event)
