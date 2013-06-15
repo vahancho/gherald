@@ -21,7 +21,6 @@
 #include <QtGui/QApplication>
 #include <gui/trayIcon.h>
 #include <strings/strings.h>
-#include "../gmaillib/imap.h"
 
 int main(int argc, char *argv[])
 {
