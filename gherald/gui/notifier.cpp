@@ -111,11 +111,6 @@ void Notifier::showEvent(QShowEvent *event)
     raise();
 
     setWindowModality(Qt::NonModal);
-
-    // Initiate iteration of messages.
-    int count = m_messages.count();
-    m_prevButton->setVisible(count > 1);
-    m_nextButton->setVisible(count > 1);
     m_current = 0;
     QTimer::singleShot(10, this, SLOT(showNext()));
 }
@@ -244,9 +239,15 @@ void Notifier::adjustGeometry()
     setGeometry(QRect(position, mySize));
 }
 
-void Notifier::setMessages(const QStringList &messages)
+void Notifier::setMessages(const QStringList &messages,
+                           bool showMarkRead)
 {
     m_messages = messages;
+
+    int count = m_messages.count();
+    m_prevButton->setVisible(count > 1);
+    m_nextButton->setVisible(count > 1);
+    m_markReadButton->setVisible(showMarkRead);
 }
 
 void Notifier::changeEvent(QEvent *event)

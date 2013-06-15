@@ -36,7 +36,8 @@ public:
     Notifier(QWidget *parent = 0);
     ~Notifier();
 
-    void setMessages(const QStringList &messages);
+    void setMessages(const QStringList &messages,
+                     bool showMarkRead = true);
 
 signals:
     void moved();
