@@ -189,7 +189,10 @@ void TrayIcon::onParseTimer()
     if (!m_gmailClient.loggedIn()) {
         m_gmailClient.login(m_login.user(), m_login.password());
     }
-    m_gmailClient.sendUnreadMessages();
+
+    if (m_gmailClient.loggedIn()) {
+        m_gmailClient.sendUnreadMessages();
+    }
 }
 
 void TrayIcon::onIconTimer()
@@ -422,15 +425,7 @@ void TrayIcon::onCheckUpdates()
 void TrayIcon::onVersionChecked()
 {
     if (!m_reportNewVersion) {
-        QPixmap pix(":/icons/app");
-        QPixmap newPix(m_noUnreadIcon.pixmap(QSize(32, 32)));
-        QPainter p(&newPix);
-        p.setBackgroundMode(Qt::TransparentMode);
-        p.translate(8, 8);
-        p.scale(2, 2);
-        p.drawPixmap(0, 0, QPixmap(":/icons/warning_sm"));
-        p.end();
-        m_noUnreadIcon = QIcon(newPix);
+        setWarningIcon(true);
         return;
     }
 
@@ -456,6 +451,23 @@ void TrayIcon::onVersionChecked()
     case QMessageBox::Cancel:
     default:
         break;
+    }
+}
+
+void TrayIcon::setWarningIcon(bool set)
+{
+    if (set) {
+        QPixmap pix(":/icons/app");
+        QPixmap newPix(m_noUnreadIcon.pixmap(QSize(32, 32)));
+        QPainter p(&newPix);
+        p.setBackgroundMode(Qt::TransparentMode);
+        p.translate(8, 8);
+        p.scale(2, 2);
+        p.drawPixmap(0, 0, QPixmap(":/icons/warning_sm"));
+        p.end();
+        m_noUnreadIcon = QIcon(newPix);
+    } else {
+        m_noUnreadIcon = QIcon(":/icons/app");
     }
 }
 

@@ -93,6 +93,8 @@ private slots:
     void onGmailError(const QString &);
 
 private:
+    void setWarningIcon(bool set);
+
     /// Translates the application.
     void translate(const QString &language);
 
