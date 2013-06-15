@@ -17,5 +17,6 @@
 		<file alias="left" >icon_left.png</file>
 		<file alias="right" >icon_right.png</file>
 		<file alias="check_update" >icon_check_update.png</file>
+		<file alias="mark_read" >icon_mark_read.png</file>
  	</qresource>
 </RCC>
