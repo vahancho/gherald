@@ -46,6 +46,8 @@ public:
 
     void markAsRead(int id);
 
+    bool loggedIn() const;
+
 signals:
     void done();
     void error(const QString &) const;
@@ -85,6 +87,7 @@ private:
 
     QString m_unreadPrefix;
     QString m_unreadMsgPrefix;
+    bool m_loggedIn;
 };
 
 #endif // __GMAIL_H__

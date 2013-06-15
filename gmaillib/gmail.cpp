@@ -25,7 +25,8 @@
 
 Gmail::Gmail(QObject *parent)
     :
-        QObject(parent)
+        QObject(parent),
+        m_loggedIn(false)
 {
     QObject::connect(&m_socket, SIGNAL(stateChanged(QAbstractSocket::SocketState)),
             this, SLOT(socketStateChanged(QAbstractSocket::SocketState)));
@@ -63,6 +64,8 @@ void Gmail::login(const QString &user, const QString &pass)
         Response response(responseStr);
         if (response.status() != Response::Ok) {
             emit error(response.statusMessage());
+        } else {
+            m_loggedIn = true;
         }
     }
 }
@@ -213,4 +216,9 @@ QString Gmail::prefix(const QString &line) const
 {
     QStringList tokens = line.split(' ');
     return tokens.first();
+}
+
+bool Gmail::loggedIn() const
+{
+    return m_loggedIn && (m_socket.state() == QAbstractSocket::ConnectedState);
 }
