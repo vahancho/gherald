@@ -95,6 +95,10 @@ TrayIcon::TrayIcon()
 
 TrayIcon::~TrayIcon()
 {
+    if (m_gmailClient.loggedIn()) {
+        m_gmailClient.logout();
+    }
+
     if (m_translator) {
         qApp->removeTranslator(m_translator);
         delete m_translator;
