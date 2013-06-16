@@ -37,6 +37,7 @@ public:
     ~Gmail();
 
     void login(const QString &user, const QString &pass);
+    void logout();
 
     void sendUnreadCount();
     int unreadCount() const;

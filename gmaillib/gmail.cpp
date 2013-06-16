@@ -38,7 +38,6 @@ Gmail::Gmail(QObject *parent)
 
 Gmail::~Gmail()
 {
-    m_socket.abort();
 }
 
 bool Gmail::connect()
@@ -49,6 +48,17 @@ bool Gmail::connect()
         return false;
     }
     return true;
+}
+
+void Gmail::logout()
+{
+    if (m_loggedIn) {
+        sendCommand("LOGOUT");
+        // Need to wait, until we are logged out.
+        m_eventLoop.exec();
+        m_loggedIn = false;
+        m_socket.abort();
+    }
 }
 
 void Gmail::login(const QString &user, const QString &pass)
