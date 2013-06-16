@@ -251,13 +251,13 @@ void TrayIcon::onParsingDone(bool error)
             dlg.setPassword(m_parser->password());
 
             if (dlg.exec() == QDialog::Accepted) {
-                // Set user data for the parser
-                m_parser->setUser(dlg.user());
-                m_parser->setPassword(dlg.password());
+                m_login.setUser(dlg.user());
+                m_login.setPassword(dlg.password());
+
+                m_parser->setUser(m_login.user());
+                m_parser->setPassword(m_login.password());
 
                 if (dlg.saveLogin()) {
-                    m_login.setUser(dlg.user());
-                    m_login.setPassword(dlg.password());
                     m_defaultManager.setDefault(str::sDefLogin, m_login.encode());
                 }
 
@@ -266,7 +266,7 @@ void TrayIcon::onParsingDone(bool error)
                     m_parseTimer.start();
                 }
 
-                m_parser->parse();
+                onParseTimer();
             } else {
                 m_parseTimer.stop();
             }
@@ -283,16 +283,18 @@ void TrayIcon::onChangeUser()
     dlg.setPassword(m_parser->password());
 
     if (dlg.exec() == QDialog::Accepted) {
-        m_parser->setUser(dlg.user());
-        m_parser->setPassword(dlg.password());
+        m_login.setUser(dlg.user());
+        m_login.setPassword(dlg.password());
+        m_parser->setUser(m_login.user());
+        m_parser->setPassword(m_login.password());
 
         if (dlg.saveLogin()) {
-            m_login.setUser(dlg.user());
-            m_login.setPassword(dlg.password());
             m_defaultManager.setDefault(str::sDefLogin, m_login.encode());
         }
 
-        m_parser->parse();
+        // Before proceed  logout from the old account.
+        m_gmailClient.logout();
+        onParseTimer();
     }
 }
 
