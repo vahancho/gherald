@@ -215,17 +215,10 @@ void TrayIcon::onParsingDone(bool error)
         // Set the correct icon and tool tip.
         if (count > 0) {
             setIcon(m_newMailIcon);
-            setToolTip(TRANSLATE(str::sUnreadConversations).arg(count));
+            setComplexToolTip(TRANSLATE(str::sUnreadConversations).arg(count));
         } else {
-            setIcon(m_noUnreadIcon);
-            if (m_versionManager.updatesAvailable()) {
-                QString msg = QString("%1\n%2").arg(TRANSLATE(str::sNoUnreadMail))
-                                               .arg(TRANSLATE(str::sNewVersion2)
-                                               .arg(m_versionManager.updatedVersion()));
-                setToolTip(msg);
-            } else {
-                setToolTip(TRANSLATE(str::sNoUnreadMail));
-            }
+            setComplexToolTip(TRANSLATE(str::sNoUnreadMail));
+            setWarningIcon(!m_gmailError.isEmpty() || m_versionManager.updatesAvailable());
             m_notifier.setMessages(QStringList() << QString(str::sReportTmplNoMail).arg(TRANSLATE(str::sUnreadLong)));
             m_iconTimer.stop();
         }
@@ -246,7 +239,7 @@ void TrayIcon::onParsingDone(bool error)
     } else {
         QString status = m_parser->status();
 
-        setToolTip(status);
+        setComplexToolTip(status);
         setIcon(m_failureIcon);
 
         status = QString(str::sStatusMessageTmpl).arg(status);
@@ -305,7 +298,7 @@ void TrayIcon::onChangeUser()
 
 void TrayIcon::onStatusChanged()
 {
-    setToolTip(m_parser->status());
+    setComplexToolTip(m_parser->status());
 }
 
 void TrayIcon::onShowNotification()
@@ -425,7 +418,6 @@ void TrayIcon::onCheckUpdates()
 void TrayIcon::onVersionChecked()
 {
     if (!m_reportNewVersion) {
-        setWarningIcon(true);
         return;
     }
 
@@ -469,6 +461,7 @@ void TrayIcon::setWarningIcon(bool set)
     } else {
         m_noUnreadIcon = QIcon(":/icons/app");
     }
+    setIcon(m_noUnreadIcon);
 }
 
 void TrayIcon::onNotifierMoved()
@@ -482,19 +475,44 @@ void TrayIcon::onGmailDone()
         m_unreadId = m_gmailClient.unreadMessages();
         qDebug() << "Unread email count:" << m_unreadId.size();
     }
+    m_gmailError.clear();
 }
 
 void TrayIcon::onGmailError(const QString &errorMsg)
 {
     m_unreadId.clear();
+    m_gmailError = errorMsg;
 }
 
 void TrayIcon::onMarkedAsRead(int id)
 {
+    if (!m_gmailClient.loggedIn()) {
+        m_gmailClient.login(m_login.user(), m_login.password());
+    }
+
     if (m_gmailClient.loggedIn() && id >= 0 && id < m_unreadId.size()) {
         int unread = m_unreadId.at(id);
         m_gmailClient.markAsRead(unread);
     }
+}
+
+void TrayIcon::setComplexToolTip(const QString &tooltip)
+{
+    bool showWarning = false;
+    QString msg = tooltip;
+    if (!m_gmailError.isEmpty()) {
+        msg.append('\n');
+        msg.append(m_gmailError);
+        showWarning = true;
+    }
+
+    if (m_versionManager.updatesAvailable()) {
+        msg.append('\n');
+        msg.append(QString("%1").arg(TRANSLATE(str::sNewVersion2)
+                                     .arg(m_versionManager.updatedVersion())));
+        showWarning = true;
+    }
+    setToolTip(msg);
 }
 
 } // namespace gui

@@ -95,6 +95,8 @@ private slots:
 private:
     void setWarningIcon(bool set);
 
+    void setComplexToolTip(const QString &tooltip);
+
     /// Translates the application.
     void translate(const QString &language);
 
@@ -122,6 +124,8 @@ private:
     Gmail m_gmailClient;
 
     QList<int> m_unreadId;
+
+    QString m_gmailError;
 
     /// The default manager.
     core::DefaultManager m_defaultManager;
