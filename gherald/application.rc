@@ -7,8 +7,8 @@ IDI_ICON1 ICON DISCARDABLE "resources/Email.ico"
 # endif
 
 VS_VERSION_INFO VERSIONINFO
-	FILEVERSION 0,3,1,0
-	PRODUCTVERSION 0,3,1,0
+	FILEVERSION 0,4,0,0
+	PRODUCTVERSION 0,4,0,0
 	FILEFLAGSMASK 0x3fL
 #ifdef _DEBUG
 	FILEFLAGS VS_FF_DEBUG
@@ -24,11 +24,11 @@ VS_VERSION_INFO VERSIONINFO
 			BLOCK "040904B0"
 			BEGIN
 				VALUE "CompanyName", "Vahan Aghajanyan\0"
-				VALUE "FileDescription", "GMail Herald\0"
-				VALUE "FileVersion", "0.3.1.0\0"
-				VALUE "LegalCopyright", "Copyright (C) 2012 Vahan Aghajanyan (vahancho@gmail.com)\0"
+				VALUE "FileDescription", "Gmail Herald\0"
+				VALUE "FileVersion", "0.4.0.0\0"
+				VALUE "LegalCopyright", "Copyright (C) 2010-2013 Vahan Aghajanyan (vahancho@gmail.com)\0"
 				VALUE "OriginalFilename", "gherald.exe\0"
-				VALUE "ProductName", "GMail Herald 0.3\0"
+				VALUE "ProductName", "Gmail Herald 0.4\0"
 			END
 		END
 		BLOCK "VarFileInfo"
