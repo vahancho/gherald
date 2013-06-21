@@ -38,6 +38,7 @@ namespace str
             "<BR><BR>"
             "%2"
             "<BR>"
+            "<BR>"
             "</td>"
             "</tr>"
             "</table>");
