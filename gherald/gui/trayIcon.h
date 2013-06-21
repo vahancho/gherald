@@ -123,8 +123,6 @@ private:
 
     Gmail m_gmailClient;
 
-    QList<int> m_unreadId;
-
     QString m_gmailError;
 
     /// The default manager.

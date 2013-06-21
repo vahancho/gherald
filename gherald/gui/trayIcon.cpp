@@ -472,21 +472,17 @@ void TrayIcon::setWarningIcon(bool set)
 
 void TrayIcon::onNotifierMoved()
 {
-    m_defaultManager.setDefault(str::sDefNotifyPos, m_notifier.geometry().topLeft());
+    m_defaultManager.setDefault(str::sDefNotifyPos,
+                                m_notifier.geometry().topLeft());
 }
 
 void TrayIcon::onGmailDone()
 {
-    if (m_gmailClient.loggedIn()) {
-        m_unreadId = m_gmailClient.unreadMessages();
-        qDebug() << "Unread email count:" << m_unreadId.size();
-    }
     m_gmailError.clear();
 }
 
 void TrayIcon::onGmailError(const QString &errorMsg)
 {
-    m_unreadId.clear();
     m_gmailError = errorMsg;
 }
 
@@ -496,9 +492,16 @@ void TrayIcon::onMarkedAsRead(int id)
         m_gmailClient.login(m_login.user(), m_login.password());
     }
 
-    if (m_gmailClient.loggedIn() && id >= 0 && id < m_unreadId.size()) {
-        int unread = m_unreadId.at(id);
-        m_gmailClient.markAsRead(unread);
+    if (m_gmailClient.loggedIn()) {
+        QList<int> unreadId = m_gmailClient.unreadMessages();
+        const int size = unreadId.size();
+        if(id >= 0 && id < size) {
+            int unread = unreadId.at(size - id - 1);
+            m_gmailClient.markAsRead(unread);
+
+            // Immediatelly update the unread messages count.
+            m_gmailClient.sendUnreadMessages();
+        }
     }
 }
 
