@@ -24,6 +24,7 @@
 #include <QTextBrowser>
 #include <QTimer>
 #include <QToolButton>
+#include <QSet>
 
 namespace gui
 {
@@ -113,6 +114,9 @@ private:
 
     /// The mouse press offset from the top left corner.
     QPoint m_offset;
+
+    /// Stores message indexes that are marked as read.
+    QSet<int> m_markedIndexes;
 };
 
 } // namespace gui

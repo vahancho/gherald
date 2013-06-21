@@ -112,6 +112,7 @@ void Notifier::showEvent(QShowEvent *event)
 
     setWindowModality(Qt::NonModal);
     m_current = -1;
+    m_markedIndexes.clear();
     QTimer::singleShot(10, this, SLOT(showNext()));
 }
 
@@ -123,6 +124,7 @@ void Notifier::showMessage()
 
         m_prevButton->setEnabled(m_current > 0);
         m_nextButton->setEnabled(m_current < m_messages.count() - 1);
+        m_markReadButton->setEnabled(!m_markedIndexes.contains(m_current));
 
         QApplication::processEvents(QEventLoop::ExcludeUserInputEvents);
     }
@@ -151,7 +153,19 @@ void Notifier::showPrevious()
 
 void Notifier::markAsRead()
 {
-    emit markAsRead(m_current);
+    m_markReadButton->setEnabled(false);
+
+    // Calculate the index of maked message taking into account
+    // that other message could also be marked as read.
+    int unread = m_current;
+    foreach(int id, m_markedIndexes) {
+        if (id < m_current) {
+            unread--;
+        }
+    }
+
+    m_markedIndexes.insert(m_current);
+    emit markAsRead(unread);
 }
 
 void Notifier::enterEvent(QEvent *event)
