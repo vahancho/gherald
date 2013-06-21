@@ -73,6 +73,8 @@ protected:
     void changeEvent(QEvent *event);
 
 private:
+    void showMessage();
+
     /// Adjust the window geometry.
     /*!
         This function resize the window to fit its content and move the window

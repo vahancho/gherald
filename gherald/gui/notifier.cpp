@@ -111,39 +111,47 @@ void Notifier::showEvent(QShowEvent *event)
     raise();
 
     setWindowModality(Qt::NonModal);
-    m_current = 0;
+    m_current = -1;
     QTimer::singleShot(10, this, SLOT(showNext()));
+}
+
+void Notifier::showMessage()
+{
+    if (m_current >= 0 && m_current < m_messages.count()) {
+        setHtml(m_messages.at(m_current));
+        adjustGeometry();
+
+        m_prevButton->setEnabled(m_current > 0);
+        m_nextButton->setEnabled(m_current < m_messages.count() - 1);
+
+        QApplication::processEvents(QEventLoop::ExcludeUserInputEvents);
+    }
 }
 
 void Notifier::showNext()
 {
-    if (m_current >= 0 && m_current < m_messages.count()) {
-        // If sender is not a button, we are in automatic iteration mode.
-        bool automatic = (qobject_cast<QToolButton *>(sender()) == 0);
-
-        setHtml(m_messages.at(m_current++));
-        adjustGeometry();
-        QApplication::processEvents(QEventLoop::ExcludeUserInputEvents);
-        if (automatic) {
-            m_iterationTimer.start();
-        } else {
-            m_iterationTimer.stop();
-        }
-
-        m_prevButton->setEnabled(m_current > 1);
-        m_nextButton->setEnabled(m_current < m_messages.count());
+    // If sender is not a button, we are in automatic iteration mode.
+    bool automatic = (qobject_cast<QToolButton *>(sender()) == 0);
+    if (automatic && m_current < m_messages.size() - 1) {
+        m_iterationTimer.start();
+    } else {
+        m_iterationTimer.stop();
     }
+
+    m_current = qMin(m_messages.size() - 1, m_current + 1);
+    showMessage();
 }
 
 void Notifier::showPrevious()
 {
-    m_current = qMax(0, m_current - 2);
-    showNext();
+    m_iterationTimer.stop();
+    m_current = qMax(0, m_current - 1);
+    showMessage();
 }
 
 void Notifier::markAsRead()
 {
-    emit markAsRead(m_current - 1);
+    emit markAsRead(m_current);
 }
 
 void Notifier::enterEvent(QEvent *event)
