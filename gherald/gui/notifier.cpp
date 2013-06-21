@@ -185,7 +185,7 @@ void Notifier::mouseReleaseEvent(QMouseEvent* event)
 
 void Notifier::resizeEvent(QResizeEvent *event)
 {
-    int frameWidth = style()->pixelMetric(QStyle::PM_DefaultFrameWidth);
+    const int frameWidth = style()->pixelMetric(QStyle::PM_DefaultFrameWidth);
 
     QSize sz = m_hideButton->sizeHint();
     // Move the button to the right top edge of the window.
@@ -202,7 +202,8 @@ void Notifier::resizeEvent(QResizeEvent *event)
 
     // Move "Mark as Read" button to the bottom of the window.
     m_markReadButton->move(rect().right() - frameWidth - 2 * m_markReadButton->width(),
-                           rect().bottom() - frameWidth - m_markReadButton->height());
+                           rect().bottom() - frameWidth -
+                           m_markReadButton->height() * 3 / 2);
 
     QTextBrowser::resizeEvent(event);
 }
