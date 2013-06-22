@@ -11,7 +11,7 @@
 ;General
 
   ; Define version
-  !define VERSION "0.3.1"
+  !define VERSION "0.4"
   !define NAME "Gmail Herald"
 
   ;Name and file
@@ -135,7 +135,8 @@ Section "Gmail Herald" SecDummy
   SetOutPath "$INSTDIR"
 
   ;ADD YOUR OWN FILES HERE...
-  File "Release\gherald.exe"
+  File "bin\release\gherald.exe"
+  File "bin\release\gmaillib.dll"
   File "distrib\msvcr90.dll"
   File "distrib\msvcp90.dll"
   File "distrib\Microsoft.VC90.CRT.manifest"
@@ -148,7 +149,7 @@ Section "Gmail Herald" SecDummy
   File "qt.conf"
 
   SetOutPath "$INSTDIR\translations"
-  File "gherald_ru.qm"
+  File "gherald\gherald_ru.qm"
 
   ;Store installation folder
   WriteRegStr HKCU "Software\${NAME}" "" $INSTDIR
@@ -193,6 +194,7 @@ Section "Uninstall"
   ;ADD YOUR OWN FILES HERE...
 
   Delete "$INSTDIR\gherald.exe"
+  Delete "$INSTDIR\gmaillib.dll"
   Delete "$INSTDIR\msvcr90.dll"
   Delete "$INSTDIR\msvcp90.dll"
   Delete "$INSTDIR\Microsoft.VC90.CRT.manifest"
