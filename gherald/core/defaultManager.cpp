@@ -20,7 +20,7 @@
 
 #include <QSettings>
 #include <QApplication>
-#include <QDesktopservices>
+#include <QDesktopServices>
 #include <QDir>
 #include "defaultManager.h"
 
