@@ -42,8 +42,8 @@ QString DefaultManager::file() const
     return QDir::toNativeSeparators(location);
 }
 
-QVariant DefaultManager::default(const QString &name,
-                                 const QVariant &defaultValue) const
+QVariant DefaultManager::getDefault(const QString &name,
+                                    const QVariant &defaultValue) const
 {
     QString settingsFile = file();
     QString oldSettingsFile = QCoreApplication::applicationDirPath() +

@@ -41,8 +41,8 @@ public:
     /// Default constructor
     DefaultManager(QObject *parent = 0);
 
-    QVariant default(const QString &name,
-                     const QVariant &defaultValue = QVariant()) const;
+    QVariant getDefault(const QString &name,
+                        const QVariant &defaultValue = QVariant()) const;
     void setDefault(const QString &name, const QVariant &value);
 
 private:

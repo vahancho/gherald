@@ -137,20 +137,20 @@ void TrayIcon::restoreState()
 {
     // Notifier position.
     QPoint center = QApplication::desktop()->screenGeometry().center();
-    m_notifier.move(m_defaultManager.default(str::sDefNotifyPos, center).toPoint());
+    m_notifier.move(m_defaultManager.getDefault(str::sDefNotifyPos, center).toPoint());
 
     // Timers.
-    int interval = m_defaultManager.default(str::sDefInterval, defInterval).toInt();
+    int interval = m_defaultManager.getDefault(str::sDefInterval, defInterval).toInt();
     m_parseTimer.setInterval(qMax(interval, 1) * 60000);
 
     // Login.
-    QString login = m_defaultManager.default(str::sDefLogin, QString()).toString();
+    QString login = m_defaultManager.getDefault(str::sDefLogin, QString()).toString();
     m_login.decodeAndSet(login);
     m_parser->setUser(m_login.user());
     m_parser->setPassword(m_login.password());
 
     // Localization.
-    QString language = m_defaultManager.default(str::sDefLanguage, str::sLanguage).toString();
+    QString language = m_defaultManager.getDefault(str::sDefLanguage, str::sLanguage).toString();
     translate(language);
 }
 
@@ -232,9 +232,9 @@ void TrayIcon::onParsingDone(bool error)
         // Show or not the notification?
         if (count > m_lastMailCount) {
             // Play sound and blink, blink the icon and show notification.
-            if (m_defaultManager.default(str::sDefSoundPlay, false).toBool()
+            if (m_defaultManager.getDefault(str::sDefSoundPlay, false).toBool()
                 && QSound::isAvailable()) {
-                QSound::play(m_defaultManager.default(str::sDefSoundFile).toString());
+                QSound::play(m_defaultManager.getDefault(str::sDefSoundFile).toString());
             }
 
             m_iconTimer.start();
@@ -342,21 +342,22 @@ void TrayIcon::onOptions()
 #endif
 
     // Set timeout
-    dlg.setTimout(m_defaultManager.default(str::sDefInterval).toInt());
+    dlg.setTimout(m_defaultManager.getDefault(str::sDefInterval).toInt());
 
     // Set sound file settings
-    dlg.setSoundFilePath(m_defaultManager.default(str::sDefSoundFile).toString());
-    dlg.setPlaySound(m_defaultManager.default(str::sDefSoundPlay, false).toBool());
+    dlg.setSoundFilePath(m_defaultManager.getDefault(str::sDefSoundFile).toString());
+    dlg.setPlaySound(m_defaultManager.getDefault(str::sDefSoundPlay, false).toBool());
 
     // Set language settings.
     QMap<QString, QVariant> defLanguages;
     defLanguages[str::sLanguageEnglishTitle] = str::sLanguageEnglishKey;
     defLanguages[str::sLanguageRussianTitle] = str::sLanguageRussianKey;
-    QMap<QString, QVariant> languages = m_defaultManager.default(str::sDefLanguages, defLanguages).toMap();
+    QMap<QString, QVariant> languages =
+        m_defaultManager.getDefault(str::sDefLanguages, defLanguages).toMap();
     QStringList languageStrings = languages.keys();
 
     QString currentLanguage =
-        languages.key(m_defaultManager.default(str::sDefLanguage, str::sLanguage).toString());
+        languages.key(m_defaultManager.getDefault(str::sDefLanguage, str::sLanguage).toString());
     int currentIndex = languageStrings.indexOf(currentLanguage);
 
     dlg.setLanguages(languages.keys(), currentIndex);
