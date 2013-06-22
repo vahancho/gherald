@@ -112,7 +112,6 @@ void Notifier::showEvent(QShowEvent *event)
 
     setWindowModality(Qt::NonModal);
     m_current = -1;
-    m_markedIndexes.clear();
     QTimer::singleShot(10, this, SLOT(showNext()));
 }
 
@@ -265,6 +264,7 @@ void Notifier::adjustGeometry()
 void Notifier::setMessages(const QStringList &messages,
                            bool showMarkRead)
 {
+    m_markedIndexes.clear();
     m_messages = messages;
 
     int count = m_messages.count();
