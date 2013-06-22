@@ -223,7 +223,9 @@ void TrayIcon::onParsingDone(bool error)
         } else {
             setComplexToolTip(TRANSLATE(str::sNoUnreadMail));
             setWarningIcon(!m_gmailError.isEmpty() || m_versionManager.updatesAvailable());
-            m_notifier.setMessages(QStringList() << QString(str::sReportTmplNoMail).arg(TRANSLATE(str::sUnreadLong)));
+            m_notifier.setMessages(QStringList() <<
+                                   QString(str::sReportTmplNoMail).arg(TRANSLATE(str::sUnreadLong)),
+                                   false);
             m_iconTimer.stop();
         }
 
