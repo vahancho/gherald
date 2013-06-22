@@ -63,6 +63,12 @@ void Gmail::logout()
 
 void Gmail::login(const QString &user, const QString &pass)
 {
+    if (user.isEmpty() || pass.isEmpty()) {
+        emit error("User credentials incomplete. "
+                   "Please provide user name and password.");
+        return;
+    }
+
     QString loginStr = QString("LOGIN %1 %2").arg(user).arg(pass);
     QString prefix = sendCommand(loginStr);
 
