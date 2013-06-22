@@ -1,6 +1,6 @@
 TEMPLATE = app
 TARGET = gherald
-QT += network xml
+QT += network
 
 CONFIG(debug) {
     DESTDIR = ../bin/debug
