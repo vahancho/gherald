@@ -296,6 +296,8 @@ void TrayIcon::onChangeUser()
 
         if (dlg.saveLogin()) {
             m_defaultManager.setDefault(str::sDefLogin, m_login.encode());
+        } else {
+            m_defaultManager.setDefault(str::sDefLogin, QString());
         }
 
         // Before proceed  logout from the old account.
