@@ -1,6 +1,7 @@
 TEMPLATE = lib
 DESTDIR = ../lib
 QT += network
+QT -= gui
 
 CONFIG(debug) {
     DLLDESTDIR = ../bin/debug
