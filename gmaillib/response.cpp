@@ -51,7 +51,9 @@ void Response::parse(const QString &input)
     QString lastLine = lines.last();
     QStringList tokens = lastLine.split(' ');
 
-    Q_ASSERT(tokens.size() > 2);
+    if (tokens.size() < 3) {
+        return;
+    }
 
     QString result = tokens.at(1);
     if (result == "OK") {
