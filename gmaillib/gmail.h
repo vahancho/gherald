@@ -59,6 +59,14 @@ private slots:
     void onProxyAuthenticationRequired(const QNetworkProxy &proxy, QAuthenticator *auth);
 
 private:
+    enum Access {
+        Unknown,
+        ReadOnly,
+        ReadWrite
+    };
+
+    Access access() const;
+
     bool connect();
     QString sendCommand(const QString &command, bool notify = true);
     QString prefix(const QString &line) const;
@@ -87,8 +95,10 @@ private:
     QQueue<Command *> m_commandQueue;
 
     QString m_unreadPrefix;
+    QString m_accessPrefix;
     QString m_unreadMsgPrefix;
     bool m_loggedIn;
+    Access m_inboxAccess;
 };
 
 #endif // __GMAIL_H__

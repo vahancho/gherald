@@ -26,7 +26,8 @@
 Gmail::Gmail(QObject *parent)
     :
         QObject(parent),
-        m_loggedIn(false)
+        m_loggedIn(false),
+        m_inboxAccess(Unknown)
 {
     QObject::connect(&m_socket, SIGNAL(stateChanged(QAbstractSocket::SocketState)),
             this, SLOT(socketStateChanged(QAbstractSocket::SocketState)));
@@ -88,7 +89,10 @@ void Gmail::login(const QString &user, const QString &pass)
 
 void Gmail::sendUnreadCount()
 {
-    sendCommand("EXAMINE INBOX", false); // Read-only asccess.
+    if (access() == Unknown) {
+        // Read-only asccess.
+        m_accessPrefix = sendCommand("EXAMINE INBOX", false);
+    }
     m_unreadPrefix = sendCommand("status INBOX (unseen)");
 }
 
@@ -116,7 +120,10 @@ int Gmail::unreadCount() const
 
 void Gmail::markAsRead(int id)
 {
-    sendCommand("SELECT INBOX", false); // Read-write access.
+    if (access() != ReadWrite) {
+        // Read-write access.
+        m_accessPrefix = sendCommand("SELECT INBOX", false);
+    }
 
     QString setFlag = QString("STORE %1 +FLAGS (\\SEEN)").arg(id);
     sendCommand(setFlag);
@@ -124,7 +131,10 @@ void Gmail::markAsRead(int id)
 
 void Gmail::sendUnreadMessages()
 {
-    sendCommand("EXAMINE INBOX", false);
+    if (access() == Unknown) {
+        // Read-only asccess.
+        m_accessPrefix = sendCommand("EXAMINE INBOX", false);
+    }
     m_unreadMsgPrefix = sendCommand("SEARCH UNSEEN");
 }
 
@@ -237,4 +247,24 @@ QString Gmail::prefix(const QString &line) const
 bool Gmail::loggedIn() const
 {
     return m_loggedIn && (m_socket.state() == QAbstractSocket::ConnectedState);
+}
+
+Gmail::Access Gmail::access() const
+{
+    if (m_commands.contains(m_accessPrefix)) {
+        QString responseStr = m_commands.value(m_accessPrefix);
+        Response response(responseStr);
+        if (response.status() == Response::Ok) {
+            QString statusMsg = response.statusMessage();
+            QString accessStr = statusMsg.section(' ', 0, 0);
+            if (accessStr == "[READ-ONLY]") {
+                return ReadOnly;
+            } else if (accessStr == "[READ-WRITE]") {
+                return ReadWrite;
+            } else {
+                return Unknown;
+            }
+        }
+    }
+    return Unknown;
 }
