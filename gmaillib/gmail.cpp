@@ -26,8 +26,7 @@
 Gmail::Gmail(QObject *parent)
     :
         QObject(parent),
-        m_loggedIn(false),
-        m_inboxAccess(Unknown)
+        m_loggedIn(false)
 {
     QObject::connect(&m_socket, SIGNAL(stateChanged(QAbstractSocket::SocketState)),
             this, SLOT(socketStateChanged(QAbstractSocket::SocketState)));

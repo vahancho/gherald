@@ -98,7 +98,6 @@ private:
     QString m_accessPrefix;
     QString m_unreadMsgPrefix;
     bool m_loggedIn;
-    Access m_inboxAccess;
 };
 
 #endif // __GMAIL_H__
