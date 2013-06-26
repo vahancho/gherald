@@ -249,7 +249,7 @@ bool Gmail::loggedIn() const
 
 Gmail::Access Gmail::access() const
 {
-    if (m_commands.contains(m_accessPrefix)) {
+    if (loggedIn() && m_commands.contains(m_accessPrefix)) {
         QString responseStr = m_commands.value(m_accessPrefix);
         Response response(responseStr);
         if (response.status() == Response::Ok) {
