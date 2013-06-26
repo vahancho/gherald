@@ -227,7 +227,6 @@ QString Gmail::sendCommand(const QString &command, bool notify)
     cmd->m_prefix = QString("cmd%1").arg(index++);
     cmd->m_notify = notify;
     m_commandQueue.enqueue(cmd);
-    m_commands[cmd->m_prefix] = QString();
 
     QString commandStr = QString("%1 %2\r\n").arg(cmd->m_prefix).arg(command);
     m_socket.write(commandStr.toUtf8());
