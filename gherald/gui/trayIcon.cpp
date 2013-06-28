@@ -249,12 +249,17 @@ void TrayIcon::onParsingDone(bool error)
         setIcon(m_failureIcon);
 
         status = QString(str::sStatusMessageTmpl).arg(status);
-        m_notifier.setMessages(QStringList() << QString(str::sReportTmplNoMail).arg(status));
+        m_notifier.setMessages(QStringList() <<
+                               QString(str::sReportTmplNoMail).arg(status),
+                               false);
 
         if (m_parser->needLogin()) {
             DlgLogin dlg;
             dlg.setUser(m_parser->user());
             dlg.setPassword(m_parser->password());
+
+            // Stop timer while user is going to input credentials.
+            m_parseTimer.stop();
 
             if (dlg.exec() == QDialog::Accepted) {
                 m_login.setUser(dlg.user());
@@ -268,13 +273,8 @@ void TrayIcon::onParsingDone(bool error)
                 }
 
                 // Restart parsing with new user data.
-                if (!m_parseTimer.isActive()) {
-                    m_parseTimer.start();
-                }
-
+                m_parseTimer.start();
                 onParseTimer();
-            } else {
-                m_parseTimer.stop();
             }
         } else {
             m_notifier.show();
@@ -303,6 +303,9 @@ void TrayIcon::onChangeUser()
         // Before proceed  logout from the old account.
         m_gmailClient.logout();
         onParseTimer();
+        if (!m_parseTimer.isActive()) {
+            m_parseTimer.start();
+        }
     }
 }
 
