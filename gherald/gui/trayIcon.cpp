@@ -382,7 +382,7 @@ void TrayIcon::onOptions()
 
         // Set the mail checking interval
         m_defaultManager.setDefault(str::sDefInterval, dlg.timout());
-        m_parseTimer.setInterval(dlg.timout() * 60000);
+        m_parseTimer.start(dlg.timout() * 60000);
 
         // Set the sound file path
         m_defaultManager.setDefault(str::sDefSoundFile, dlg.soundFilePath());
