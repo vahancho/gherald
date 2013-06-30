@@ -329,7 +329,7 @@ void TrayIcon::onShowNotification()
         QString m(TRANSLATE(str::sReportTmpl).arg(countReport).arg(mails.at(i).toString()));
         messages.append(m);
     }
-    m_notifier.setMessages(messages);
+    m_notifier.setMessages(messages, m_gmailClient.loggedIn());
     m_notifier.show();
 }
 
