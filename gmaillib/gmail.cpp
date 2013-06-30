@@ -130,10 +130,8 @@ void Gmail::markAsRead(int id)
 
 void Gmail::sendUnreadMessages()
 {
-    if (access() == Unknown) {
-        // Read-only asccess.
-        m_accessPrefix = sendCommand("EXAMINE INBOX", false);
-    }
+    // Read-only asccess.
+    m_accessPrefix = sendCommand("EXAMINE INBOX", false);
     m_unreadMsgPrefix = sendCommand("SEARCH UNSEEN");
 }
 
