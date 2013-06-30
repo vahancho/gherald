@@ -78,10 +78,10 @@ void Gmail::login(const QString &user, const QString &pass)
     if (m_commands.contains(prefix)) {
         QString responseStr = m_commands.value(prefix);
         Response response(responseStr);
-        if (response.status() != Response::Ok) {
-            emit error(response.statusMessage());
-        } else {
+        if (response.status() == Response::Ok) {
             m_loggedIn = true;
+        } else {
+            emit error(response.statusMessage());
         }
     }
 }
@@ -176,26 +176,26 @@ void Gmail::socketReadyRead()
         m_commandQueue.isEmpty()) {
         return;
     }
-    qDebug() << "Received";
+    QByteArray data = m_socket.readAll();
+    qDebug() << "Received" << data;
+
+    QBuffer buffer;
+    buffer.open(QBuffer::WriteOnly);
+    buffer.write(data);
+    buffer.close();
 
     Command *cmd = m_commandQueue.head();
-    cmd->m_buffer->open(QBuffer::WriteOnly | QIODevice::Append);
-    cmd->m_buffer->write(m_socket.readAll());
-    cmd->m_buffer->close();
-
-    cmd->m_buffer->open(QBuffer::ReadOnly);
-    while (cmd->m_buffer->canReadLine()) {
-        QString line = QString::fromUtf8(cmd->m_buffer->readLine().data());
+    buffer.open(QBuffer::ReadOnly);
+    while (buffer.canReadLine()) {
+        QString line = QString::fromUtf8(buffer.readLine().data());
+        QString pref = prefix(line);
 
         // Update the command's response.
         QString response = m_commands.value(cmd->m_prefix);
         response.append(line);
         m_commands.insert(cmd->m_prefix, response);
 
-        QString pref = prefix(line);
         if (pref == cmd->m_prefix) {
-            qDebug() << response;
-
             m_commandQueue.dequeue();
             if (m_eventLoop.isRunning()) {
                 m_eventLoop.quit();
@@ -203,14 +203,19 @@ void Gmail::socketReadyRead()
             if (cmd->m_notify) {
                 emit done();
             }
-            delete cmd;
-            return;
+
+            Command *tmpCommand = cmd;
+            qint64 pos = buffer.pos();
+            if (pos < buffer.size()) {
+                // Case when this chunk of data contains responses from
+                // more than one command.
+                Q_ASSERT(!m_commandQueue.isEmpty());
+                cmd = m_commandQueue.head();
+            }
+            delete tmpCommand;
         }
     }
-    // Remove data that has been stored from the buffer.
-    qint64 pos = cmd->m_buffer->pos();
-    cmd->m_buffer->close();
-    cmd->m_buffer->setData(QByteArray(cmd->m_buffer->data()).remove(0, pos));
+    buffer.close();
 }
 
 QString Gmail::sendCommand(const QString &command, bool notify)
@@ -228,6 +233,7 @@ QString Gmail::sendCommand(const QString &command, bool notify)
     m_commandQueue.enqueue(cmd);
 
     QString commandStr = QString("%1 %2\r\n").arg(cmd->m_prefix).arg(command);
+    qDebug() << "Sent:" << commandStr;
     m_socket.write(commandStr.toUtf8());
     if (!m_socket.waitForBytesWritten()) {
         emit error("Failed to write into the socket.");

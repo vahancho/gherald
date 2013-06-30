@@ -79,17 +79,7 @@ private:
 
     struct Command
     {
-        Command()
-        {
-            m_buffer = new QBuffer();
-        }
-        ~Command()
-        {
-            delete m_buffer;
-        }
-
         QString m_prefix;
-        QBuffer *m_buffer;
         bool m_notify;
     };
     QQueue<Command *> m_commandQueue;
