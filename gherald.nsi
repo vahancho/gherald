@@ -149,7 +149,7 @@ Section "Gmail Herald" SecDummy
   File "qt.conf"
 
   SetOutPath "$INSTDIR\translations"
-  File "gherald\gherald_ru.qm"
+  File "gherald_ru.qm"
 
   ;Store installation folder
   WriteRegStr HKCU "Software\${NAME}" "" $INSTDIR
