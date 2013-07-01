@@ -94,7 +94,7 @@ namespace str
     const char *sUser = QT_TRANSLATE_NOOP("GHerald", "User name:");
     const char *sPassword = QT_TRANSLATE_NOOP("GHerald", "Password:");
     const char *sRememberPassword = QT_TRANSLATE_NOOP("GHerald", "&Remember my password");
-    const char *sLoginTitle = QT_TRANSLATE_NOOP("GHerald", "Connect to mail.google.com");
+    const char *sLoginTitle = QT_TRANSLATE_NOOP("GHerald", "Connect to Gmail");
 
     // Options dialog strings
     const char *sSound = QT_TRANSLATE_NOOP("GHerald", "Play sound on new mail");
@@ -110,6 +110,7 @@ namespace str
 
     // Other strings
     const char *sHideBtnToolTip = QT_TRANSLATE_NOOP("GHerald", "Hide window");
+    const char *sMarkAsReadToolTip = QT_TRANSLATE_NOOP("GHerald", "Mark as read");
     const char *sNextToolTip = QT_TRANSLATE_NOOP("GHerald", "Next message");
     const char *sPrevToolTip = QT_TRANSLATE_NOOP("GHerald", "Previous message");
     const char *sMsgOfMsg = QT_TRANSLATE_NOOP("GHerald", "%1 of %2");

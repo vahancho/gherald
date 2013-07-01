@@ -64,8 +64,8 @@ void Gmail::logout()
 void Gmail::login(const QString &user, const QString &pass)
 {
     if (user.isEmpty() || pass.isEmpty()) {
-        emit error("User credentials incomplete. "
-                   "Please provide user name and password.");
+        emit error(tr("User credentials incomplete. "
+                      "Please provide user name and password."));
         return;
     }
 
@@ -220,7 +220,7 @@ QString Gmail::sendCommand(const QString &command, bool notify)
 {
     // Always connect to the server if not connected yet.
     if (m_socket.state() != QAbstractSocket::ConnectedState && !connect()) {
-        emit error("Cannot connect to the server.");
+        emit error(tr("Cannot connect to the server."));
         return QString();
     }
 
@@ -234,7 +234,7 @@ QString Gmail::sendCommand(const QString &command, bool notify)
     qDebug() << "Sent:" << commandStr;
     m_socket.write(commandStr.toUtf8());
     if (!m_socket.waitForBytesWritten()) {
-        emit error("Failed to write into the socket.");
+        emit error(tr("Failed to write into the socket."));
         return QString();
     }
     return cmd->m_prefix;

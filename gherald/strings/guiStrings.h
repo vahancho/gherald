@@ -86,6 +86,7 @@ namespace str
 
     // Other strings
     extern const char *sHideBtnToolTip;
+    extern const char *sMarkAsReadToolTip;
     extern const char *sNextToolTip;
     extern const char *sPrevToolTip;
     extern const char *sMsgOfMsg;
