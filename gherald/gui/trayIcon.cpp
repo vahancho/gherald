@@ -95,6 +95,7 @@ TrayIcon::TrayIcon()
 
 TrayIcon::~TrayIcon()
 {
+    m_parseTimer.stop();
     if (m_gmailClient.loggedIn()) {
         m_gmailClient.logout();
     }
