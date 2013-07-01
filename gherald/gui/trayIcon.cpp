@@ -408,7 +408,7 @@ void TrayIcon::onViewInbox()
 {
     // Provide password as a plain text here in url. This is not so safe!
     QString urlStr = QString(str::sMailBoxUrl).arg(m_parser->user())
-                                              .arg(m_parser->password());
+                                              .arg(QString());
     QDesktopServices::openUrl(QUrl(urlStr, QUrl::TolerantMode));
 }
 
