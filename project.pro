@@ -7,3 +7,5 @@ SUBDIRS = gmaillib \
 
 CONFIG += ordered
 
+TRANSLATIONS += gherald_ru.ts
+
