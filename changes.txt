@@ -1,4 +1,25 @@
 -----------------------------------------------------------------------------------------
+date, 2013. Version 0.4
+-----------------------------------------------------------------------------------------
+New features
+
+- Added ability to mark email messages as read from the notification window. This feature
+  requires enabling IMAP support for Gmail account,
+- Added ability to check for application updates,
+- Extended tray icon with notification capabilities: show warnings and tool tips,
+- Refactored version control code,
+- Change the application settings file location - now it stored in the user preferences
+  system directory.
+
+Bug fixes
+
+- Fixed notification window behaviour: it does not freeze the whole GUI anymore,
+- Improved notification window layout,
+- Now changing application settings take effect immediately and not after restarting
+  the application,
+- Fixed spelling errors in localization texts.
+
+-----------------------------------------------------------------------------------------
 April 6, 2012. Version 0.3.1
 -----------------------------------------------------------------------------------------
 - Fixed issue caused by opening multiple browser windows (tabs) when double clicking on icon.
@@ -8,36 +29,32 @@ April 6, 2012. Version 0.3.1
 -----------------------------------------------------------------------------------------
 September 26, 2011. Version 0.3
 -----------------------------------------------------------------------------------------
-1) Fixed wrong separators usage issue in GMail Herald executable path when save it into
-the Windows registry for starting the application on system start up. This prevented to
-GMail Herald start as expected. Now the native separators used instead.
-
-2) Improved version control system.
-
-3) Implemented the new installer script for new NSIS based package generation. The new
-install package includes SSL related libraries missed in previous packages as well
-Microsoft run times.
-
-4) Removed dependency from QCA libraries and use Qt based functions instead.
-
-5) Added icon for the Gmail Herald executable file (Windows).
+- Fixed wrong separators usage issue in GMail Herald executable path when save it into
+  the Windows registry for starting the application on system start up. This prevented to
+  GMail Herald start as expected. Now the native separators used instead.
+- Improved version control system.
+- Implemented the new installer script for new NSIS based package generation. The new
+  install package includes SSL related libraries missed in previous packages as well
+  Microsoft run times.
+- Removed dependency from QCA libraries and use Qt based functions instead.
+- Added icon for the Gmail Herald executable file (Windows).
 
 -----------------------------------------------------------------------------------------
 August 14, 2010. Version 0.2.226 (beta)
 -----------------------------------------------------------------------------------------
 
-Show received email date and time on notification window.
-Cosmetic improvements on notification window.
-Changed notification window icon.
-Added button to notification window to hide it with mouse click.
-Play sound on new email arrival.
-Improved Options dialog with sound file settings.
-Added new icons for menu items.
-Added "View Inbox" menu item to open Gmail inbox in browser window.
-Improved application version maintenance
-Gmail Herald checks for updates on startup and allow to download new versions from About window.
-Implement localization support with translatable string constants.
-Add support for Russian language.
+- Show received email date and time on notification window.
+- Cosmetic improvements on notification window.
+- Changed notification window icon.
+- Added button to notification window to hide it with mouse click.
+- Play sound on new email arrival.
+- Improved Options dialog with sound file settings.
+- Added new icons for menu items.
+- Added "View Inbox" menu item to open Gmail inbox in browser window.
+- Improved application version maintenance
+- Gmail Herald checks for updates on startup and allow to download new versions from About window.
+- Implement localization support with translatable string constants.
+- Add support for Russian language.
 
 -----------------------------------------------------------------------------------------
 July 22, 2010. Version 0.1.202 (beta)
