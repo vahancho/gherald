@@ -26,7 +26,7 @@
 #include <QSslSocket>
 #include <QEventLoop>
 #include <QQueue>
-#include <QBuffer>
+#include <QTimer>
 #include "export.h"
 
 class GMAILLIB_EXPORT Gmail : public QObject
@@ -57,6 +57,7 @@ private slots:
     void socketStateChanged(QAbstractSocket::SocketState state);
     void socketReadyRead();
     void onProxyAuthenticationRequired(const QNetworkProxy &proxy, QAuthenticator *auth);
+    void onTimer();
 
 private:
     enum Access {
@@ -73,6 +74,7 @@ private:
 
     QSslSocket m_socket;
     QEventLoop m_eventLoop;
+    QTimer m_timer;
 
     /// Map between command and its responce.
     QMap<QString, QString> m_commands;

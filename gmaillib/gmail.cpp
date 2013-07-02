@@ -20,8 +20,12 @@
 
 #include <QtNetwork/QSslCipher>
 #include <QStringList>
+#include <QBuffer>
 #include "gmail.h"
 #include "response.h"
+
+// Time to wait for the server response.
+static int timeout = 45000;
 
 Gmail::Gmail(QObject *parent)
     :
@@ -34,6 +38,8 @@ Gmail::Gmail(QObject *parent)
             this, SLOT(socketReadyRead()));
     QObject::connect(&m_socket, SIGNAL(proxyAuthenticationRequired(const QNetworkProxy &, QAuthenticator *)),
             this, SLOT(onProxyAuthenticationRequired(const QNetworkProxy &, QAuthenticator *)));
+
+    QObject::connect(&m_timer, SIGNAL(timeout()), SLOT(onTimer()));
 }
 
 Gmail::~Gmail()
@@ -69,12 +75,17 @@ void Gmail::login(const QString &user, const QString &pass)
         return;
     }
 
+    // Do not do anything while login is in progress.
+    if (m_eventLoop.isRunning()) {
+        return;
+    }
+
     QString loginStr = QString("LOGIN %1 %2").arg(user).arg(pass);
     QString prefix = sendCommand(loginStr);
 
     // Need to wait, until we are logged in.
+    qDebug() << "GHERALD: Start event loop.";
     m_eventLoop.exec();
-
     if (m_commands.contains(prefix)) {
         QString responseStr = m_commands.value(prefix);
         Response response(responseStr);
@@ -170,6 +181,8 @@ void Gmail::onProxyAuthenticationRequired(const QNetworkProxy & /*proxy*/,
 
 void Gmail::socketReadyRead()
 {
+    m_timer.stop();
+
     if (m_socket.state() == QAbstractSocket::UnconnectedState ||
         m_commandQueue.isEmpty()) {
         return;
@@ -197,6 +210,7 @@ void Gmail::socketReadyRead()
             m_commandQueue.dequeue();
             if (m_eventLoop.isRunning()) {
                 m_eventLoop.quit();
+                qDebug() << "GHERALD: Stop event loop.";
             }
             if (cmd->m_notify) {
                 emit done();
@@ -207,6 +221,7 @@ void Gmail::socketReadyRead()
             if (pos < buffer.size()) {
                 // Case when this chunk of data contains responses from
                 // more than one command.
+                qDebug() << "GHERALD: double command case.";
                 Q_ASSERT(!m_commandQueue.isEmpty());
                 cmd = m_commandQueue.head();
             }
@@ -232,6 +247,11 @@ QString Gmail::sendCommand(const QString &command, bool notify)
 
     QString commandStr = QString("%1 %2\r\n").arg(cmd->m_prefix).arg(command);
     qDebug() << "Sent:" << commandStr;
+
+    // Start response timeout counting. If we do not get response after it is
+    // timed out, we reset everything to start all over again.
+    m_timer.start(timeout);
+
     m_socket.write(commandStr.toUtf8());
     if (!m_socket.waitForBytesWritten()) {
         emit error(tr("Failed to write into the socket."));
@@ -270,3 +290,15 @@ Gmail::Access Gmail::access() const
     }
     return Unknown;
 }
+
+void Gmail::onTimer()
+{
+    qDebug() << "GHERALD: command is timed out";
+    // Reset everything.
+    if (m_eventLoop.isRunning()) {
+        m_eventLoop.quit();
+    }
+    m_commandQueue.clear();
+    m_commands.clear();
+}
+
