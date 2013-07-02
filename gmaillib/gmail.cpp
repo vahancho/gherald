@@ -195,6 +195,7 @@ void Gmail::socketReadyRead()
     buffer.write(data);
     buffer.close();
 
+    bool shouldReset = false;
     Command *cmd = m_commandQueue.head();
     buffer.open(QBuffer::ReadOnly);
     while (buffer.canReadLine()) {
@@ -212,8 +213,22 @@ void Gmail::socketReadyRead()
                 m_eventLoop.quit();
                 qDebug() << "GHERALD: Stop event loop.";
             }
-            if (cmd->m_notify) {
-                emit done();
+
+            // Check the response status.
+            Response r(response);
+            if (r.status() == Response::Ok) {
+                if (cmd->m_notify) {
+                    emit done();
+                }
+            } else {
+                // An error occurred, so no need to process the rest commands.
+                // Rest commands even may not appear at all.
+                // Let's reset everything and start over again.
+                shouldReset = true;
+                if (cmd->m_notify) {
+                    emit error(r.statusMessage());
+                }
+                qDebug() << "GHERALD: ERROR:" << r.statusMessage();
             }
 
             Command *tmpCommand = cmd;
@@ -229,6 +244,9 @@ void Gmail::socketReadyRead()
         }
     }
     buffer.close();
+    if (shouldReset) {
+        reset();
+    }
 }
 
 QString Gmail::sendCommand(const QString &command, bool notify)
@@ -294,6 +312,11 @@ Gmail::Access Gmail::access() const
 void Gmail::onTimer()
 {
     qDebug() << "GHERALD: command is timed out";
+    reset();
+}
+
+void Gmail::reset()
+{
     // Reset everything.
     if (m_eventLoop.isRunning()) {
         m_eventLoop.quit();
@@ -301,4 +324,3 @@ void Gmail::onTimer()
     m_commandQueue.clear();
     m_commands.clear();
 }
-

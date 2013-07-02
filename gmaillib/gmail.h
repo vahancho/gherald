@@ -71,6 +71,7 @@ private:
     bool connect();
     QString sendCommand(const QString &command, bool notify = true);
     QString prefix(const QString &line) const;
+    void reset();
 
     QSslSocket m_socket;
     QEventLoop m_eventLoop;
