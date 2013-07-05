@@ -59,6 +59,16 @@ private slots:
     void onProxyAuthenticationRequired(const QNetworkProxy &proxy, QAuthenticator *auth);
     void onTimer();
 
+    /// Reads and returns response text for the given command.
+    /*!
+        As soon as the command data is found, it deleted from the storage. Thus
+        each command's response can be read only once.
+    */
+    QString responseData(const QString &prefix) const;
+
+    /// Returns true if response for the given command exists.
+    bool isResponseExist(const QString &prefix) const;
+
 private:
     enum Access {
         Unknown,
@@ -77,8 +87,8 @@ private:
     QEventLoop m_eventLoop;
     QTimer m_timer;
 
-    /// Map between command and its responce.
-    QMap<QString, QString> m_commands;
+    /// Map between command and its response.
+    mutable QMap<QString, QString> m_commands;
 
     struct Command
     {

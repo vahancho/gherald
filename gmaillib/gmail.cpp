@@ -86,8 +86,8 @@ void Gmail::login(const QString &user, const QString &pass)
     // Need to wait, until we are logged in.
     qDebug() << "GHERALD: Start event loop.";
     m_eventLoop.exec();
-    if (m_commands.contains(prefix)) {
-        QString responseStr = m_commands.value(prefix);
+    if (isResponseExist(prefix)) {
+        QString responseStr = responseData(prefix);
         Response response(responseStr);
         if (response.status() == Response::Ok) {
             m_loggedIn = true;
@@ -108,8 +108,8 @@ void Gmail::sendUnreadCount()
 
 int Gmail::unreadCount() const
 {
-    if (m_commands.contains(m_unreadPrefix)) {
-        QString responseStr = m_commands.value(m_unreadPrefix);
+    if (isResponseExist(m_unreadPrefix)) {
+        QString responseStr = responseData(m_unreadPrefix);
         Response response(responseStr);
         if (response.status() == Response::Ok) {
             QStringList info = response.info();
@@ -141,15 +141,15 @@ void Gmail::markAsRead(int id)
 
 void Gmail::sendUnreadMessages()
 {
-    // Read-only asccess.
+    // Read-only access.
     m_accessPrefix = sendCommand("EXAMINE INBOX", false);
     m_unreadMsgPrefix = sendCommand("SEARCH UNSEEN");
 }
 
 QList<int> Gmail::unreadMessages() const
 {
-    if (m_commands.contains(m_unreadMsgPrefix)) {
-        QString responseStr = m_commands.value(m_unreadMsgPrefix);
+    if (isResponseExist(m_unreadMsgPrefix)) {
+        QString responseStr = responseData(m_unreadMsgPrefix);
         Response response(responseStr);
         if (response.status() == Response::Ok) {
             QStringList info = response.info();
@@ -203,7 +203,7 @@ void Gmail::socketReadyRead()
         QString pref = prefix(line);
 
         // Update the command's response.
-        QString response = m_commands.value(cmd->m_prefix);
+        QString response = responseData(cmd->m_prefix);
         response.append(line);
         m_commands.insert(cmd->m_prefix, response);
 
@@ -247,6 +247,7 @@ void Gmail::socketReadyRead()
     if (shouldReset) {
         reset();
     }
+    qDebug() << "GHERALD: unread responses count:" << m_commands.count();
 }
 
 QString Gmail::sendCommand(const QString &command, bool notify)
@@ -291,8 +292,8 @@ bool Gmail::loggedIn() const
 
 Gmail::Access Gmail::access() const
 {
-    if (loggedIn() && m_commands.contains(m_accessPrefix)) {
-        QString responseStr = m_commands.value(m_accessPrefix);
+    if (loggedIn() && isResponseExist(m_accessPrefix)) {
+        QString responseStr = responseData(m_accessPrefix);
         Response response(responseStr);
         if (response.status() == Response::Ok) {
             QString statusMsg = response.statusMessage();
@@ -323,4 +324,14 @@ void Gmail::reset()
     }
     m_commandQueue.clear();
     m_commands.clear();
+}
+
+QString Gmail::responseData(const QString &prefix) const
+{
+    return m_commands.take(prefix);
+}
+
+bool Gmail::isResponseExist(const QString &prefix) const
+{
+    return m_commands.contains(prefix);
 }
