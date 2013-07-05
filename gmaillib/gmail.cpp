@@ -100,9 +100,10 @@ void Gmail::login(const QString &user, const QString &pass)
 void Gmail::sendUnreadCount()
 {
     if (access() == Unknown) {
-        // Read-only asccess.
+        // Read-only access.
         m_accessPrefix = sendCommand("EXAMINE INBOX", false);
     }
+    m_commands.remove(m_unreadPrefix);
     m_unreadPrefix = sendCommand("status INBOX (unseen)");
 }
 
@@ -141,8 +142,13 @@ void Gmail::markAsRead(int id)
 
 void Gmail::sendUnreadMessages()
 {
+    // Remove response received from previous invocation if it was not read.
+    m_commands.remove(m_accessPrefix);
+
     // Read-only access.
     m_accessPrefix = sendCommand("EXAMINE INBOX", false);
+
+    m_commands.remove(m_unreadMsgPrefix);
     m_unreadMsgPrefix = sendCommand("SEARCH UNSEEN");
 }
 
