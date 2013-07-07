@@ -19,13 +19,14 @@
 ***************************************************************************/
 
 #include <QtNetwork/QSslCipher>
+#include <QCoreApplication>
 #include <QStringList>
 #include <QBuffer>
 #include "gmail.h"
 #include "response.h"
 
 // Time to wait for the server response.
-static int timeout = 45000;
+static int timeout = 30000;
 
 Gmail::Gmail(QObject *parent)
     :
@@ -40,6 +41,7 @@ Gmail::Gmail(QObject *parent)
             this, SLOT(onProxyAuthenticationRequired(const QNetworkProxy &, QAuthenticator *)));
 
     QObject::connect(&m_timer, SIGNAL(timeout()), SLOT(onTimer()));
+    QObject::connect(this, SIGNAL(done()), SLOT(onLogin()));
 }
 
 Gmail::~Gmail()
@@ -58,10 +60,12 @@ bool Gmail::connect()
 
 void Gmail::logout()
 {
-    if (m_loggedIn) {
+    if (loggedIn()) {
         sendCommand("LOGOUT");
-        // Need to wait, until we are logged out.
-        m_eventLoop.exec();
+        while(m_timer.isActive()) {
+            qDebug() << "GHERALD wait for logging out...";
+            QCoreApplication::processEvents(QEventLoop::WaitForMoreEvents);
+        }
         m_loggedIn = false;
         m_socket.abort();
     }
@@ -75,25 +79,12 @@ void Gmail::login(const QString &user, const QString &pass)
         return;
     }
 
-    // Do not do anything while login is in progress.
-    if (m_eventLoop.isRunning()) {
-        return;
-    }
-
     QString loginStr = QString("LOGIN %1 %2").arg(user).arg(pass);
-    QString prefix = sendCommand(loginStr);
+    m_loginPrefix = sendCommand(loginStr);
 
-    // Need to wait, until we are logged in.
-    qDebug() << "GHERALD: Start event loop.";
-    m_eventLoop.exec();
-    if (isResponseExist(prefix)) {
-        QString responseStr = responseData(prefix);
-        Response response(responseStr);
-        if (response.status() == Response::Ok) {
-            m_loggedIn = true;
-        } else {
-            emit error(response.statusMessage());
-        }
+    while(!m_loggedIn && m_timer.isActive()) {
+        qDebug() << "GHERALD wait for logging in...";
+        QCoreApplication::processEvents(QEventLoop::WaitForMoreEvents);
     }
 }
 
@@ -176,8 +167,11 @@ QList<int> Gmail::unreadMessages() const
     return QList<int>();
 }
 
-void Gmail::socketStateChanged(QAbstractSocket::SocketState /*state*/)
+void Gmail::socketStateChanged(QAbstractSocket::SocketState state)
 {
+    if (state == QAbstractSocket::UnconnectedState) {
+        m_loggedIn = false;
+    }
 }
 
 void Gmail::onProxyAuthenticationRequired(const QNetworkProxy & /*proxy*/,
@@ -187,8 +181,6 @@ void Gmail::onProxyAuthenticationRequired(const QNetworkProxy & /*proxy*/,
 
 void Gmail::socketReadyRead()
 {
-    m_timer.stop();
-
     if (m_socket.state() == QAbstractSocket::UnconnectedState ||
         m_commandQueue.isEmpty()) {
         return;
@@ -215,10 +207,6 @@ void Gmail::socketReadyRead()
 
         if (pref == cmd->m_prefix) {
             m_commandQueue.dequeue();
-            if (m_eventLoop.isRunning()) {
-                m_eventLoop.quit();
-                qDebug() << "GHERALD: Stop event loop.";
-            }
 
             // Check the response status.
             Response r(response);
@@ -245,6 +233,10 @@ void Gmail::socketReadyRead()
                 qDebug() << "GHERALD: double command case.";
                 Q_ASSERT(!m_commandQueue.isEmpty());
                 cmd = m_commandQueue.head();
+            }
+
+            if (m_commandQueue.isEmpty()) {
+                m_timer.stop();
             }
             delete tmpCommand;
         }
@@ -325,11 +317,9 @@ void Gmail::onTimer()
 void Gmail::reset()
 {
     // Reset everything.
-    if (m_eventLoop.isRunning()) {
-        m_eventLoop.quit();
-    }
     m_commandQueue.clear();
     m_commands.clear();
+    m_timer.stop();
 }
 
 QString Gmail::responseData(const QString &prefix) const
@@ -340,4 +330,13 @@ QString Gmail::responseData(const QString &prefix) const
 bool Gmail::isResponseExist(const QString &prefix) const
 {
     return m_commands.contains(prefix);
+}
+
+void Gmail::onLogin()
+{
+    if (isResponseExist(m_loginPrefix)) {
+        QString responseStr = responseData(m_loginPrefix);
+        Response response(responseStr);
+        m_loggedIn = (response.status() == Response::Ok);
+    }
 }

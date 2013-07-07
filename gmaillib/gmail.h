@@ -24,7 +24,6 @@
 #include <QObject>
 #include <QAbstractSocket>
 #include <QSslSocket>
-#include <QEventLoop>
 #include <QQueue>
 #include <QTimer>
 #include "export.h"
@@ -58,6 +57,7 @@ private slots:
     void socketReadyRead();
     void onProxyAuthenticationRequired(const QNetworkProxy &proxy, QAuthenticator *auth);
     void onTimer();
+    void onLogin();
 
     /// Reads and returns response text for the given command.
     /*!
@@ -84,7 +84,6 @@ private:
     void reset();
 
     QSslSocket m_socket;
-    QEventLoop m_eventLoop;
     QTimer m_timer;
 
     /// Map between command and its response.
@@ -97,6 +96,7 @@ private:
     };
     QQueue<Command *> m_commandQueue;
 
+    QString m_loginPrefix;
     QString m_unreadPrefix;
     QString m_accessPrefix;
     QString m_unreadMsgPrefix;
