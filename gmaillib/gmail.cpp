@@ -194,24 +194,24 @@ void Gmail::socketReadyRead()
     buffer.close();
 
     bool shouldReset = false;
-    Command *cmd = m_commandQueue.head();
+    Command cmd = m_commandQueue.head();
     buffer.open(QBuffer::ReadOnly);
     while (buffer.canReadLine()) {
         QString line = QString::fromUtf8(buffer.readLine().data());
         QString pref = prefix(line);
 
         // Update the command's response.
-        QString response = responseData(cmd->m_prefix);
+        QString response = responseData(cmd.m_prefix);
         response.append(line);
-        m_commands.insert(cmd->m_prefix, response);
+        m_commands.insert(cmd.m_prefix, response);
 
-        if (pref == cmd->m_prefix) {
+        if (pref == cmd.m_prefix) {
             m_commandQueue.dequeue();
 
             // Check the response status.
             Response r(response);
             if (r.status() == Response::Ok) {
-                if (cmd->m_notify) {
+                if (cmd.m_notify) {
                     emit done();
                 }
             } else {
@@ -219,13 +219,12 @@ void Gmail::socketReadyRead()
                 // Rest commands even may not appear at all.
                 // Let's reset everything and start over again.
                 shouldReset = true;
-                if (cmd->m_notify) {
+                if (cmd.m_notify) {
                     emit error(r.statusMessage());
                 }
                 qDebug() << "GHERALD: ERROR:" << r.statusMessage();
             }
 
-            Command *tmpCommand = cmd;
             qint64 pos = buffer.pos();
             if (pos < buffer.size()) {
                 // Case when this chunk of data contains responses from
@@ -238,7 +237,6 @@ void Gmail::socketReadyRead()
             if (m_commandQueue.isEmpty()) {
                 m_timer.stop();
             }
-            delete tmpCommand;
         }
     }
     buffer.close();
@@ -257,12 +255,12 @@ QString Gmail::sendCommand(const QString &command, bool notify)
     }
 
     static int index = 1;
-    Command *cmd = new Command;
-    cmd->m_prefix = QString("cmd%1").arg(index++);
-    cmd->m_notify = notify;
+    Command cmd;
+    cmd.m_prefix = QString("cmd%1").arg(index++);
+    cmd.m_notify = notify;
     m_commandQueue.enqueue(cmd);
 
-    QString commandStr = QString("%1 %2\r\n").arg(cmd->m_prefix).arg(command);
+    QString commandStr = QString("%1 %2\r\n").arg(cmd.m_prefix).arg(command);
     qDebug() << "Sent:" << commandStr;
 
     // Start response timeout counting. If we do not get response after it is
@@ -274,7 +272,7 @@ QString Gmail::sendCommand(const QString &command, bool notify)
         emit error(tr("Failed to write into the socket."));
         return QString();
     }
-    return cmd->m_prefix;
+    return cmd.m_prefix;
 }
 
 QString Gmail::prefix(const QString &line) const

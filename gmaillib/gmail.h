@@ -94,7 +94,7 @@ private:
         QString m_prefix;
         bool m_notify;
     };
-    QQueue<Command *> m_commandQueue;
+    QQueue<Command> m_commandQueue;
 
     QString m_loginPrefix;
     QString m_unreadPrefix;
