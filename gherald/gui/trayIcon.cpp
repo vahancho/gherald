@@ -124,7 +124,7 @@ void TrayIcon::createMenu()
     act->setFont(actionFont);
 
     menu->addAction(QIcon(":icons/check"), TRANSLATE(str::sMenuCheckMail), this, SLOT(onParseTimer()));
-    menu->addAction(QIcon(":icons/refresh"), TRANSLATE(str::sMenuTellAgain), &m_notifier, SLOT(show()));
+    menu->addAction(QIcon(":icons/refresh"), TRANSLATE(str::sMenuTellAgain), this, SLOT(onShowNotification()));
     menu->addAction(QIcon(":icons/user"), TRANSLATE(str::sMenuChangeUser), this, SLOT(onChangeUser()));
     menu->addAction(QIcon(":icons/options"), TRANSLATE(str::sMenuOptions), this, SLOT(onOptions()));
     menu->addSeparator();
@@ -317,20 +317,21 @@ void TrayIcon::onStatusChanged()
 
 void TrayIcon::onShowNotification()
 {
-    QStringList messages;
     const QList<core::MailEntry> &mails = m_parser->mailEntries();
-
     // New (unread) mail count can be any, however we show only limited
     // number of items (actually Gmail service shows only first 20
     // messages).
     const int count = mails.count();
-    const int unreadCount = m_parser->newMailCount();
-    for (int i = 0; i < count; ++i) {
-        QString countReport = TRANSLATE(str::sMsgOfMsg).arg(i + 1).arg(unreadCount);
-        QString m(TRANSLATE(str::sReportTmpl).arg(countReport).arg(mails.at(i).toString()));
-        messages.append(m);
+    if (count > 0) {
+        QStringList messages;
+        const int unreadCount = m_parser->newMailCount();
+        for (int i = 0; i < count; ++i) {
+            QString countReport = TRANSLATE(str::sMsgOfMsg).arg(i + 1).arg(unreadCount);
+            QString m(TRANSLATE(str::sReportTmpl).arg(countReport).arg(mails.at(i).toString()));
+            messages.append(m);
+        }
+        m_notifier.setMessages(messages, m_gmailClient.loggedIn());
     }
-    m_notifier.setMessages(messages, m_gmailClient.loggedIn());
     m_notifier.show();
 }
 
