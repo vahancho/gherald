@@ -21,8 +21,8 @@ INCLUDEPATH += .
 INCLUDEPATH += ../
 
 # Define the application version and version string.
-DEFINES += GHERALD_VERSION=0x0003020b
-DEFINES += GHERALD_VERSION_STR=\\\"0.3.2b\\\"
+DEFINES += GHERALD_VERSION=0x000400ff
+DEFINES += GHERALD_VERSION_STR=\\\"0.4\\\"
 
 DEPENDPATH += .
 OBJECTS_DIR += obj
