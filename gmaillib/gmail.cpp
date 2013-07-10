@@ -63,7 +63,6 @@ void Gmail::logout()
     if (loggedIn()) {
         sendCommand("LOGOUT");
         while(m_timer.isActive()) {
-            qDebug() << "GHERALD wait for logging out...";
             QCoreApplication::processEvents(QEventLoop::WaitForMoreEvents);
         }
         m_loggedIn = false;
@@ -83,7 +82,6 @@ void Gmail::login(const QString &user, const QString &pass)
     m_loginPrefix = sendCommand(loginStr);
 
     while(!m_loggedIn && m_timer.isActive()) {
-        qDebug() << "GHERALD wait for logging in...";
         QCoreApplication::processEvents(QEventLoop::WaitForMoreEvents);
     }
 }
@@ -186,7 +184,6 @@ void Gmail::socketReadyRead()
         return;
     }
     QByteArray data = m_socket.readAll();
-    qDebug() << "Received" << data;
 
     QBuffer buffer;
     buffer.open(QBuffer::WriteOnly);
@@ -222,14 +219,12 @@ void Gmail::socketReadyRead()
                 if (cmd.m_notify) {
                     emit error(r.statusMessage());
                 }
-                qDebug() << "GHERALD: ERROR:" << r.statusMessage();
             }
 
             qint64 pos = buffer.pos();
             if (pos < buffer.size()) {
                 // Case when this chunk of data contains responses from
                 // more than one command.
-                qDebug() << "GHERALD: double command case.";
                 Q_ASSERT(!m_commandQueue.isEmpty());
                 cmd = m_commandQueue.head();
             }
@@ -243,7 +238,6 @@ void Gmail::socketReadyRead()
     if (shouldReset) {
         reset();
     }
-    qDebug() << "GHERALD: unread responses count:" << m_commands.count();
 }
 
 QString Gmail::sendCommand(const QString &command, bool notify)
@@ -261,7 +255,6 @@ QString Gmail::sendCommand(const QString &command, bool notify)
     m_commandQueue.enqueue(cmd);
 
     QString commandStr = QString("%1 %2\r\n").arg(cmd.m_prefix).arg(command);
-    qDebug() << "Sent:" << commandStr;
 
     // Start response timeout counting. If we do not get response after it is
     // timed out, we reset everything to start all over again.
@@ -308,7 +301,6 @@ Gmail::Access Gmail::access() const
 
 void Gmail::onTimer()
 {
-    qDebug() << "GHERALD: command is timed out";
     reset();
 }
 
