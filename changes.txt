@@ -1,5 +1,5 @@
 -----------------------------------------------------------------------------------------
-date, 2013. Version 0.4
+July 11, 2013. Version 0.4
 -----------------------------------------------------------------------------------------
 New features
 
@@ -19,7 +19,8 @@ Bug fixes
 - Improved notification window layout,
 - Now changing application settings take effect immediately and not after restarting
   the application,
-- Fixed spelling errors in localization texts.
+- Fixed spelling errors in localization texts,
+- Multiple small fixes and improvements.
 
 -----------------------------------------------------------------------------------------
 April 6, 2012. Version 0.3.1
