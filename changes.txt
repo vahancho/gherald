@@ -3,6 +3,8 @@ date, 2013. Version 0.4
 -----------------------------------------------------------------------------------------
 New features
 
+- Added ability to manually iterate (back and forth) over the multiple messages in notification
+  window,
 - Added ability to mark email messages as read from the notification window. This feature
   requires enabling IMAP support for Gmail account,
 - Added ability to check for application updates,
