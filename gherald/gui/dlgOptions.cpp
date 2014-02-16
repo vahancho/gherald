@@ -53,7 +53,10 @@ DlgOptions::DlgOptions(QWidget * parent, Qt::WindowFlags f)
     soundLayout->addWidget(m_leSoundFilePath);
     soundLayout->addWidget(m_browse);
 
+    m_chkShowPopup = new QCheckBox(TRANSLATE(str::sShowPopup));
+
     QVBoxLayout *mainSoundLayoyut = new QVBoxLayout;
+    mainSoundLayoyut->addWidget(m_chkShowPopup);
     mainSoundLayoyut->addWidget(m_chkPlaySound);
     mainSoundLayoyut->addLayout(soundLayout);
 
@@ -130,6 +133,16 @@ bool DlgOptions::runOnStartUp() const
 void DlgOptions::setRunOnStartUp(bool run)
 {
     m_chkRunStartUp->setChecked(run);
+}
+
+bool DlgOptions::showPopup() const
+{
+    return (m_chkShowPopup->checkState() == Qt::Checked);
+}
+
+void DlgOptions::setShowPopup(bool run)
+{
+    m_chkShowPopup->setChecked(run);
 }
 
 void DlgOptions::setTimout(int timout)

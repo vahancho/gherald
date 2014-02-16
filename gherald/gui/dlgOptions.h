@@ -49,6 +49,10 @@ public:
 
     bool runOnStartUp() const;
 
+    bool showPopup() const;
+
+    void setShowPopup(bool run);
+
     QString soundFilePath() const;
 
     void setSoundFilePath(const QString &path);
@@ -62,9 +66,7 @@ public:
     void setPlaySound(bool play) const;
 
 private slots:
-
     void onPlayStateChanged(int state);
-
     void onFileBrowse();
 
 private:
@@ -74,6 +76,8 @@ private:
     QCheckBox *m_chkRunStartUp;
 
     QCheckBox *m_chkPlaySound;
+
+    QCheckBox *m_chkShowPopup;
 
     QPushButton *m_browse;
 

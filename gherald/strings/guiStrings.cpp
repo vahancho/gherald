@@ -98,6 +98,7 @@ namespace str
 
     // Options dialog strings
     const char *sSound = QT_TRANSLATE_NOOP("GHerald", "Play sound on new mail");
+    const char *sShowPopup = QT_TRANSLATE_NOOP("GHerald", "Show notifications");
     const char *sRun = QT_TRANSLATE_NOOP("GHerald", "&Run on system start up");
     const char *sTimeout = QT_TRANSLATE_NOOP("GHerald", "Check mail every:");
     const char *sMailGroup = QT_TRANSLATE_NOOP("GHerald", "&Mail checking preferences");

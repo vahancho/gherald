@@ -74,6 +74,7 @@ namespace str
 
     // Options dialog strings
     extern const char *sSound;
+    extern const char *sShowPopup;
     extern const char *sRun;
     extern const char *sTimeout;
     extern const char *sMailGroup;
