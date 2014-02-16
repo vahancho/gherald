@@ -106,18 +106,23 @@ You can download new version from the project&apos;s web site.</source>
         <translation>Соединиться с Gmail</translation>
     </message>
     <message>
-        <location filename="gherald/strings/guiStrings.cpp" line="103"/>
+        <location filename="gherald/strings/guiStrings.cpp" line="101"/>
+        <source>Show notifications</source>
+        <translation>Показывать уведомления</translation>
+    </message>
+    <message>
+        <location filename="gherald/strings/guiStrings.cpp" line="104"/>
         <source>&amp;Mail checking preferences</source>
         <translation>&amp;Настройки проверки почты</translation>
     </message>
     <message>
-        <location filename="gherald/strings/guiStrings.cpp" line="109"/>
+        <location filename="gherald/strings/guiStrings.cpp" line="110"/>
         <source>&amp;User interface language</source>
         <oldsource>User interface language</oldsource>
         <translation>&amp;Язык интерфейса</translation>
     </message>
     <message>
-        <location filename="gherald/strings/guiStrings.cpp" line="112"/>
+        <location filename="gherald/strings/guiStrings.cpp" line="113"/>
         <source>Hide window</source>
         <translation>Скрыть окно</translation>
     </message>
@@ -137,32 +142,32 @@ You can download new version from the project&apos;s web site.</source>
         <translation>&amp;Запомнить пароль</translation>
     </message>
     <message>
-        <location filename="gherald/strings/guiStrings.cpp" line="113"/>
+        <location filename="gherald/strings/guiStrings.cpp" line="114"/>
         <source>Mark as read</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="gherald/strings/guiStrings.cpp" line="114"/>
+        <location filename="gherald/strings/guiStrings.cpp" line="115"/>
         <source>Next message</source>
         <translation>Следующее сообщение</translation>
     </message>
     <message>
-        <location filename="gherald/strings/guiStrings.cpp" line="115"/>
+        <location filename="gherald/strings/guiStrings.cpp" line="116"/>
         <source>Previous message</source>
         <translation>Предыдущее сообщение</translation>
     </message>
     <message>
-        <location filename="gherald/strings/guiStrings.cpp" line="116"/>
+        <location filename="gherald/strings/guiStrings.cpp" line="117"/>
         <source>%1 of %2</source>
         <translation>%1 из %2</translation>
     </message>
     <message>
-        <location filename="gherald/strings/guiStrings.cpp" line="117"/>
+        <location filename="gherald/strings/guiStrings.cpp" line="118"/>
         <source>OK</source>
         <translation>ОК</translation>
     </message>
     <message>
-        <location filename="gherald/strings/guiStrings.cpp" line="118"/>
+        <location filename="gherald/strings/guiStrings.cpp" line="119"/>
         <source>Cancel</source>
         <translation>Отмена</translation>
     </message>
@@ -213,37 +218,37 @@ You can download new version from the project&apos;s web site.</source>
         <translation>Воспроизвести звук при новом сообщении</translation>
     </message>
     <message>
-        <location filename="gherald/strings/guiStrings.cpp" line="101"/>
+        <location filename="gherald/strings/guiStrings.cpp" line="102"/>
         <source>&amp;Run on system start up</source>
         <translation>&amp;Запускать при старте системы</translation>
     </message>
     <message>
-        <location filename="gherald/strings/guiStrings.cpp" line="102"/>
+        <location filename="gherald/strings/guiStrings.cpp" line="103"/>
         <source>Check mail every:</source>
         <translation>Проверять почту каждые:</translation>
     </message>
     <message>
-        <location filename="gherald/strings/guiStrings.cpp" line="104"/>
+        <location filename="gherald/strings/guiStrings.cpp" line="105"/>
         <source>minutes</source>
         <translation>минуты</translation>
     </message>
     <message>
-        <location filename="gherald/strings/guiStrings.cpp" line="105"/>
+        <location filename="gherald/strings/guiStrings.cpp" line="106"/>
         <source>...</source>
         <translation>...</translation>
     </message>
     <message>
-        <location filename="gherald/strings/guiStrings.cpp" line="106"/>
+        <location filename="gherald/strings/guiStrings.cpp" line="107"/>
         <source>Gmail Herald Options</source>
         <translation>Настройки Gmail Herald</translation>
     </message>
     <message>
-        <location filename="gherald/strings/guiStrings.cpp" line="107"/>
+        <location filename="gherald/strings/guiStrings.cpp" line="108"/>
         <source>Browse for notification sound file</source>
         <translation>Поиск звукового файла</translation>
     </message>
     <message>
-        <location filename="gherald/strings/guiStrings.cpp" line="108"/>
+        <location filename="gherald/strings/guiStrings.cpp" line="109"/>
         <source>Sound (*.wav)</source>
         <translation>Файл звука (*.wav)</translation>
     </message>
@@ -251,17 +256,17 @@ You can download new version from the project&apos;s web site.</source>
 <context>
     <name>Gmail</name>
     <message>
-        <location filename="gmaillib/gmail.cpp" line="67"/>
+        <location filename="gmaillib/gmail.cpp" line="76"/>
         <source>User credentials incomplete. Please provide user name and password.</source>
         <translation>Данные пользователя не полные. Пожалуйста впишите имя пользователя и пароль.</translation>
     </message>
     <message>
-        <location filename="gmaillib/gmail.cpp" line="223"/>
+        <location filename="gmaillib/gmail.cpp" line="247"/>
         <source>Cannot connect to the server.</source>
         <translation>Невозможно соединиться с сервером.</translation>
     </message>
     <message>
-        <location filename="gmaillib/gmail.cpp" line="237"/>
+        <location filename="gmaillib/gmail.cpp" line="265"/>
         <source>Failed to write into the socket.</source>
         <translation>Failed to write into the socket.</translation>
     </message>
