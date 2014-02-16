@@ -238,8 +238,11 @@ void TrayIcon::onParsingDone(bool error)
                 QSound::play(m_defaultManager.getDefault(str::sDefSoundFile).toString());
             }
 
+            if (m_defaultManager.getDefault(str::sDefShowPopup, true).toBool()) {
+                onShowNotification();
+            }
+
             m_iconTimer.start();
-            onShowNotification();
         }
 
         m_lastMailCount = count;
@@ -353,6 +356,9 @@ void TrayIcon::onOptions()
     dlg.setSoundFilePath(m_defaultManager.getDefault(str::sDefSoundFile).toString());
     dlg.setPlaySound(m_defaultManager.getDefault(str::sDefSoundPlay, false).toBool());
 
+    // Set notification settings.
+    dlg.setShowPopup(m_defaultManager.getDefault(str::sDefShowPopup, true).toBool());
+
     // Set language settings.
     QMap<QString, QVariant> defLanguages;
     defLanguages[str::sLanguageEnglishTitle] = str::sLanguageEnglishKey;
@@ -389,6 +395,8 @@ void TrayIcon::onOptions()
         // Set the sound file path
         m_defaultManager.setDefault(str::sDefSoundFile, dlg.soundFilePath());
         m_defaultManager.setDefault(str::sDefSoundPlay, dlg.playSound());
+
+        m_defaultManager.setDefault(str::sDefShowPopup, dlg.showPopup());
 
         // Set the current language
         QVariant currentLanguageKey = languages.value(dlg.currentLanguage());

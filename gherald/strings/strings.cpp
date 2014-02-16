@@ -30,6 +30,7 @@ namespace str
     const char *sDefLogin = "Login";
     const char *sDefSoundFile = "NotifySoundFile";
     const char *sDefSoundPlay = "NotifySoundPlay";
+    const char *sDefShowPopup = "NotifyShowPopup";
     const char *sDefLanguage = "Language";
     const char *sDefLanguages = "Languages";
 

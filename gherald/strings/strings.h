@@ -35,6 +35,7 @@ namespace str
     extern const char *sDefSoundPlay;
     extern const char *sDefLanguage;
     extern const char *sDefLanguages;
+    extern const char *sDefShowPopup;
 
     // Internationalization strings
     extern const char *sLanguageEnglishKey;
